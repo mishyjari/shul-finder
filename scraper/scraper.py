@@ -1,3 +1,9 @@
+#### WEB SCRAPER ####
+#### Scrape synagogue data from mavensearch.com ####
+#### Can dump to JSON or MongoDB ####
+#### Currently only supports US Synagogues ####
+#### Due to inconsistency in the source's webpages, not all results are included, fix coming! ####
+
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -81,6 +87,7 @@ def getSynagogues(url):
 
     return synagogues
 
+# Use this code to create database entries
 for state in statesUrls:
     stateName, stateUrl = state[0], state[1]
 
@@ -105,3 +112,28 @@ for state in statesUrls:
         except:
             print('Error')
             print(town)
+
+# Use this code to dump a JSON file
+usSynagogues = {}
+for state in statesUrls:
+    synagogues = []
+
+    towns = visitState(state[1])
+
+    for town in towns:
+        try:
+            synagogueData = {
+                town[0]: getSynagogues(town[1])
+            }
+            synagogues.append(synagogueData)
+        except:
+            synagogues.append({'ERROR': town})
+
+    try:
+        usSynagogues[state[0]].append(synagogues)
+    except:
+        usSynagogues[state[0]] = [synagogues]
+
+
+with open('synagogues.json', 'w') as outfile:
+    json.dump(usSynagogues, outfile)

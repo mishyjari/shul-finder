@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
-
+require('./db/mongoose.js');
+const Synagogue = require('./models/synagogues.js');
+const synagoguesRouter = require('./routes/synagogues.js')
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -9,26 +11,16 @@ const publicPath = path.join(__dirname, '../public');
 const viewsPath = path.join(__dirname, '../views');
 
 app.use(express.static(publicPath));
+app.use(synagoguesRouter);
+app.use(express.json());
 
 // Set view engine
 app.set('view engine', 'hbs');
 app.set('views', viewsPath);
 
-// Routes
-app.get('/', (req,res) => {
-    const synagogues = require('./resources/synagogues.json');
-    res.render('index', {
-        synagogues: synagogues,
-        foo: 'bar'
-    })
-});
-
-app.get('/synagogues', ( req, res ) => {
-    const synagogues = require('./resources/synagogues.json');
-    res.send(synagogues)
-})
-
 // Start server
 app.listen(port, () => {
     console.log('Server is listening on port ' + port)
 });
+
+module.exports = app;
