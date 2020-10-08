@@ -10,18 +10,13 @@ searchForm.addEventListener('submit', e => {
     e.preventDefault();
 
     const query = e.target.children['search-box'].value;
-    const filters = [];
-    console.log(movementFilter.querySelectorAll('input'))
-
-    movementFilter.querySelectorAll('input')
-        .forEach(option => option.checked ? filters.push(option.value) : null)
-    console.log(filters)
+    const filters = movementFilter.value;
 
     let url = query ? `/synagogues?search=${query}` : `/synagogues`; 
 
-    if ( filters.length > 0 ) {
-        url += query ? '&filters=' : '?filters='
-        filters.forEach(filter => url += `${filter},`)
+    if ( filters && filters !== 'all' ) {
+        url += query ? '&filters=' : '?filters=';
+        url+= filters
     }
 
     console.log(url)
