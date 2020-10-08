@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Shul Finder</title>
 </head>
 <body>
     <h1>ShulFinder</h1>
     <form id='search-form'>
-        <label>Search by city</label>
+        <label>Search by Name, City or State</label><br />
         <input type='text' name='search-box' />
         <button type='submit'>Search</button>
+    </form>
+    <form id='movement-filter'>
+        <label>Show Only:</label><br />
+        <input type='radio' value='conservative' name='movement'>Conservative</input><br />
+        <input type='radio' value='orthodox' name='movement'>Orthodox</input><br />
+        <input type='radio' value='reform' name='movement'>Reform</input> 
     </form>
     <div id='search-results-container'>
         <ul id='search-results-list'
