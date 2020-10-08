@@ -30,15 +30,21 @@ searchForm.addEventListener('submit', e => {
                 return resultsList.innerHTML = `<h5>No Results</h5>`;
             }
             synagogues.forEach(synagogueData => {
-                const synagogue = document.createElement('li');
-                synagogue.innerHTML = `
-                    <strong>${synagogueData.name}</strong>
-                    <br />
-                    ${synagogueData.address}
-                    <br />
-                    ${synagogueData.movement}
+                const synagogueCard = document.createElement('div');
+                synagogueCard.setAttribute('class', 'card')
+
+                synagogueCard.innerHTML = `
+                    <div class='card-body'>
+                        <h5 class='card-title'>${synagogueData.name}</h5>
+                        <h6 class='card-title'>${synagogueData.movement}</h5>
+                        <p class='card=text'>
+                            ${synagogueData.address}, <br />
+                            ${synagogueData.city}, ${synagogueData.state}
+                        </p>
+                        <a href=${synagogueData.url} class='btn btn-outline-secondary'>Website</a>
+                    </div>
                 `;
-                resultsList.appendChild(synagogue)
+                resultsList.appendChild(synagogueCard)
             })
         })
         .catch( console.log )

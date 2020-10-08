@@ -26,7 +26,7 @@ router.get('/synagogues', async ( req, res ) => {
                        movement: { $regex: `.*(?i)${filters}.*` }
                     }
                 ]}
-            ).limit(10) 
+            ) 
             : await Synagogue.find({}).limit(10)
         res.send(synagogues);
     }
