@@ -1,20 +1,26 @@
 const express = require('express');
 const router = new express.Router();
-const url = require('url');
 const Synagogue = require('../models/synagogues.js');
 
 router.get('/', (req,res) => {
     res.render('index')
 });
 
+router.get('/map', (req,res) => {
+    res.send('Maps view not implemented')
+});
+
+router.get('/about', (req,res) => {
+    res.send('About view not implemented')
+})
+
 router.get('/synagogues', async ( req, res ) => {
     try {
-        const query = req.query.search;
-        const filters = req.query.filters ? req.query.filters.split(',').filter(q => q)[0] : [];
-        console.log(filters)
-        console.log(query)
+        const query = req.query.search || '';
+        const filters = req.query.filters || '';
+        console.log(req.query)
 
-        const synagogues = query 
+        const synagogues = query
             ? await Synagogue.find(
                 {$and: [
                     {$or: [
@@ -27,12 +33,16 @@ router.get('/synagogues', async ( req, res ) => {
                     }
                 ]}
             ) 
-            : await Synagogue.find({}).limit(10)
+            : await Synagogue.find({})
         res.send(synagogues);
     }
     catch (err) {
         res.status(500).send(err)
     }    
 });
+
+router.get('/synagogues/:id', (req,res) => {
+    res.send('Show page not implemented.')
+})
 
 module.exports = router;
