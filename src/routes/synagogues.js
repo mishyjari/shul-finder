@@ -20,7 +20,7 @@ router.get('/synagogues', async ( req, res ) => {
         const filters = req.query.filters || '';
         console.log(req.query)
 
-        const synagogues = query
+        const synagogues = query || filters
             ? await Synagogue.find(
                 {$and: [
                     {$or: [

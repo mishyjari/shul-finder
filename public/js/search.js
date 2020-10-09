@@ -3,15 +3,43 @@ const resultsInfo = document.getElementById('results-info');
 // Event handler for movement filter
 const movementFilter = document.getElementById('movement-filter');
 movementFilter.addEventListener('change', e => {
-    console.log('Live update not implemented.')
+    const search = searchForm.children['search-box'].value.trim();
+    console.log(search)
+
+    runSearch(search)
 });
 
 // Event handler for search form
 const searchForm = document.getElementById('search-form');
 searchForm.addEventListener('submit', e => {
     e.preventDefault();
-
     const search = e.target.children['search-box'].value.trim();
+    runSearch(search)
+    
+});
+
+// Fetch all movements from db and populate filter dropdown
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/synagogues')
+        .then( res => res.json() )
+        .then( data => {
+            let movements = [];
+            data.forEach(entry => {
+                if ( !movements.includes(entry.movement) ){
+                    movements.push(entry.movement);
+                }
+            });
+            movements.forEach(type => {
+                let option = document.createElement('option');
+                option.setAttribute('value', type);
+                option.innerText = type
+                movementFilter.appendChild(option);
+            });
+        });
+
+});
+
+const runSearch = search => {
     const filters = movementFilter.value;
     console.log(filters)
 
@@ -64,26 +92,4 @@ searchForm.addEventListener('submit', e => {
         <p>${err}</p>
         `
     }
-    
-});
-
-// Fetch all movements from db and populate filter dropdown
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('/synagogues')
-        .then( res => res.json() )
-        .then( data => {
-            let movements = [];
-            data.forEach(entry => {
-                if ( !movements.includes(entry.movement) ){
-                    movements.push(entry.movement);
-                }
-            });
-            movements.forEach(type => {
-                let option = document.createElement('option');
-                option.setAttribute('value', type);
-                option.innerText = type
-                movementFilter.appendChild(option);
-            });
-        });
-
-});
+}
