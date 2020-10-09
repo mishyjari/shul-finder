@@ -22,6 +22,8 @@ document.getElementById('search-form')
 // On page load, find all movement names listed in the database and populate the filters dropdown with that info
 // This would be best moved to static data in production which updates only occasionally
 document.addEventListener('DOMContentLoaded', () => {
+    resultsInfo.innerHTML = '<h4>Use the search box or filters</h4>'
+    searchForm.value = '';
     fetch('/synagogues')
         .then( res => res.json() )
         .then( data => {

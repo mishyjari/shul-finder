@@ -2,9 +2,10 @@ const express = require('express');
 const path = require('path');
 require('./db/mongoose.js');
 const Synagogue = require('./models/synagogues.js');
-const synagoguesRouter = require('./routes/synagogues.js')
+const synagoguesRouter = require('./routes/synagogues.js');
 const app = express();
 const port = process.env.PORT || 3000;
+
 
 // Define and register paths
 const publicPath = path.join(__dirname, '../public');
