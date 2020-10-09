@@ -7,13 +7,12 @@ An interactive map application listing synagogues near the user or given any par
 - Initial stage; building a web scraper to pull data on synagogues from [Maven Search](http://www.mavensearch.com/synagogues/synagogues.asp). They have a fairly thorough library of synagogues internationally, but it is organized in inconsistent tables with minimal metadata. Edge case results are being ironed out. 
 - Set up router with Express.js and database with MongoDB. Results from scraper now stored in database for retrival
 - Search box will find results by name, city or state, including partials and case insensitive
-- Filter by different movements
+- Filter by different movements. Currently fetches all movements from the database to generate a list. This data needs to be normalized, and could probably be made static to reduce network traffic
   
 ## To Do
 - Searching
-  - Ensure proper URL query strings
-  - Add additional movements to filter and allow for immediate updates on change
   - Paginate results, allow for sorting by differnet fields
+  - Move the filter-by-movement dropdown to a nicer looking menu and allow for selecting of multiple options
 - Geoloation
   - Show results by user's location
   - Geocode addresses and link to map
@@ -27,3 +26,5 @@ An interactive map application listing synagogues near the user or given any par
   - Link to webpage for each shul
 - Data
   - Current data is incomplete per inconsistencies on mavensearch. Refine scraper as much as possible and manually fix remaining errors
+- Views
+  - Factor into partials

@@ -1,14 +1,15 @@
 const resultsInfo = document.getElementById('results-info');
+const searchForm = document.getElementById('search-box');
+const movementFilter = document.getElementById('movement-filter');
 
 // Listen for change on the movements filter dropdown, run search
-const movementFilter = document.getElementById('movement-filter');
 movementFilter.addEventListener('change', e => {
-    const search = searchForm.children['search-box'].value.trim();
+    console.log(searchForm)
+    const search = searchForm.value.trim();
     runSearch(search)
 });
 
 // Listen for change on the search box, run search
-const searchForm = document.getElementById('search-box');
 searchForm.addEventListener("input", e => {
     const search = e.target.value
     runSearch(search)

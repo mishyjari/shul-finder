@@ -8,11 +8,11 @@ router.get('/', (req,res) => {
 });
 
 router.get('/map', (req,res) => {
-    res.send('Maps view not implemented')
+    res.render('map')
 });
 
 router.get('/about', (req,res) => {
-    res.send('About view not implemented')
+    res.render('about')
 });
 
 // GET /synagogues to query database
@@ -48,8 +48,14 @@ router.get('/synagogues', async ( req, res ) => {
 });
 
 // Show details page for a given shul
-router.get('/synagogues/:id', (req,res) => {
-    res.send('Show page not implemented.')
+router.get('/synagogues/:id', async (req,res) => {
+    try {
+        const synagogue = await Synagogue.findById(req.params.id);
+        res.render('show', { synagogue })
+    }
+    catch ( err ) {
+        console.log(err)
+    }
 })
 
 module.exports = router;
