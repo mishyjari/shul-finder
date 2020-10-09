@@ -2,6 +2,7 @@ const express = require('express');
 const router = new express.Router();
 const Synagogue = require('../models/synagogues.js');
 
+// Get routes for main pages
 router.get('/', (req,res) => {
     res.render('index')
 });
@@ -12,15 +13,19 @@ router.get('/map', (req,res) => {
 
 router.get('/about', (req,res) => {
     res.send('About view not implemented')
-})
+});
 
+// GET /synagogues to query database
+// Query params will accept search=(name, city, or state) and/or filters=movement
+// Queries are inclusive and case insenstive... 'elohim' will return mathces for 'Beth Elohim', etc
 router.get('/synagogues', async ( req, res ) => {
     try {
+        // Store query params
         const query = req.query.search || '';
         const filters = req.query.filters || '';
-        console.log(req.query)
 
         const synagogues = query || filters
+            // Handle db query with args
             ? await Synagogue.find(
                 {$and: [
                     {$or: [
@@ -33,6 +38,7 @@ router.get('/synagogues', async ( req, res ) => {
                     }
                 ]}
             ) 
+            // No args provided, return all entries
             : await Synagogue.find({})
         res.send(synagogues);
     }
@@ -41,6 +47,7 @@ router.get('/synagogues', async ( req, res ) => {
     }    
 });
 
+// Show details page for a given shul
 router.get('/synagogues/:id', (req,res) => {
     res.send('Show page not implemented.')
 })

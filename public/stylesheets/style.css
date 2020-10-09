@@ -21,3 +21,10 @@
     color: #fff;
     text-decoration: none;
 }
+
+#search-box {
+    color: #777;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
