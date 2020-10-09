@@ -4,7 +4,6 @@ const movementFilter = document.getElementById('movement-filter');
 
 // Listen for change on the movements filter dropdown, run search
 movementFilter.addEventListener('change', e => {
-    console.log(searchForm)
     const search = searchForm.value.trim();
     runSearch(search)
 });
