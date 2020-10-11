@@ -2,6 +2,8 @@ const resultsInfo = document.getElementById('results-info');
 const searchForm = document.getElementById('search-box');
 const movementFilter = document.getElementById('movement-filter');
 const resultsList = document.getElementById('search-results-list');
+const buttonContainer = document.getElementById('load-more');
+
 
 // Listen for change on the movements filter dropdown, run search
 movementFilter.addEventListener('change', e => {
@@ -23,14 +25,14 @@ document.getElementById('search-form')
 // This would be best moved to static data in production which updates only occasionally
 document.addEventListener('DOMContentLoaded', () => {
     resultsInfo.innerHTML = `
-        <h5>Enable location services or use the search bar to find shuls anywhere in the US (RoW coming soon!)</h5>
+        <h5>Enable location services or use the search bar to find shuls anywhere in the US (RoWr coming soon!)</h5>
     `
     searchForm.value = '';
     fetch('/synagogues')
         .then( res => res.json() )
-        .then( data => {
+        .then( ({synagogues}) => {
             let movements = [];
-            data.forEach(entry => {
+            synagogues.forEach(entry => {
                 // Confirm uniqeness and push to array
                 if ( !movements.includes(entry.movement) ){
                     movements.push(entry.movement);
@@ -53,32 +55,48 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Search function. Accepts a string as a search term and check the filters element for its value.
-const runSearch = search => {
+const runSearch = (search, persist=false, skip=0, limit=10) => {
     const filters = movementFilter.value;
 
     // Create query string
-    let query = search ? `synagogues?search=${search}` : `synagogues`; 
+    let query = search ? `synagogues?search=${search}` : `synagogues?`; 
+    
     if ( filters && filters !== 'all' ) {
-        query += search ? `&filters=${filters}` : `?filters=${filters}`;
+        query += search ? `&filters=${filters}` : `filters=${filters}`;
     }
+    
+    if ( !filters && !search ) {
+        query += `skip=${ parseInt(skip) }&limit=${ parseInt(limit) }`
+    }
+    else {
+        query += `&skip=${ parseInt(skip) }&limit=${ parseInt(limit) }`
+    }
+
 
     // Use the URL class to create a properly formatted query
     const url = new URL(`${this.location.origin}/${query}`)
 
+    console.log(url)
+
     try {
         fetch(url.pathname + url.search)
         .then( res => res.json() )
-        .then( synagogues => {
-            // Get results list DOM element and reset
-            resultsList.innerText = '';
+        .then( ({synagogues,count}) => {
 
+            if (!persist) {
+                // Get results list DOM element and reset
+                resultsList.innerText = '';
+            };
+            buttonContainer.innerText = '';
+
+            
             // Print number of results found
             if ( synagogues.length === 0 ) {
                 return resultsInfo.innerHTML = `<h5>No results found in ${search}.</h5>`
             } else {
                 resultsInfo.innerHTML = search.length > 0 ? 
-                    `<h5>${synagogues.length} results in ${search}.</h5>` :
-                    `<h5>Showing ${synagogues.length} results</h5>`
+                    `<h5>${count} results in ${search}.</h5>` :
+                    `<h5>Showing ${count} results</h5>`
             };
 
             // Create a bootstrap card element for each result and append
@@ -98,7 +116,20 @@ const runSearch = search => {
                     </div>
                 `;
                 resultsList.appendChild(synagogueCard)
-            })
+            });
+
+            if ( count > limit && skip+limit < count ) {
+                const moreButton = document.createElement('button');
+                moreButton.setAttribute('class', 'btn btn-outline-secondary');
+                moreButton.innerHTML = 'Load more results';
+                buttonContainer.appendChild(moreButton)
+                moreButton.addEventListener('click', () => {
+                    buttonContainer.removeChild(moreButton)
+                    runSearch(search, true, skip+limit, limit)
+                })
+            } else (
+                buttonContainer.innerHTML = `<h6>End of results</h6>`
+            )
         })
         .catch( console.log )
     }

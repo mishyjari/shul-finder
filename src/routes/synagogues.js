@@ -20,28 +20,36 @@ router.get('/about', (req,res) => {
 // Query params will accept search=(name, city, or state) and/or filters=movement
 // Queries are inclusive and case insenstive... 'elohim' will return mathces for 'Beth Elohim', etc
 router.get('/synagogues', async ( req, res ) => {
+    console.log(req.query)
     try {
         // Store query params
         const query = req.query.search || '';
         const filters = req.query.filters || '';
+        const dbSearch = {$and: [
+            {$or: [
+                { city: { $regex: `.*(?i)${query}.*` }},
+                { name: { $regex: `.*(?i)${query}.*` }},
+                { state: { $regex: `.*(?i)${query}.*` }}
+            ]},
+            {
+               movement: { $regex: `.*(?i)${filters}.*` }
+            }
+        ]};
+
+        // Total entries returned
+        const count = await Synagogue.countDocuments(dbSearch)
 
         const synagogues = query || filters
             // Handle db query with args
-            ? await Synagogue.find(
-                {$and: [
-                    {$or: [
-                        { city: { $regex: `.*(?i)${query}.*` }},
-                        { name: { $regex: `.*(?i)${query}.*` }},
-                        { state: { $regex: `.*(?i)${query}.*` }}
-                    ]},
-                    {
-                       movement: { $regex: `.*(?i)${filters}.*` }
-                    }
-                ]}
-            ) 
+            ? await Synagogue.find( dbSearch )
+                .limit( parseInt( req.query.limit || 10 ))
+                .skip( parseInt(req.query.skip || 0 ))
+
             // No args provided, return all entries
             : await Synagogue.find({})
-        res.send(synagogues);
+                .limit( parseInt( req.query.limit || 10 ))
+                .skip( parseInt(req.query.skip || 0 ))
+        res.send({synagogues, count});
     }
     catch (err) {
         res.status(500).send(err)
