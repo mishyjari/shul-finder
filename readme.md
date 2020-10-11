@@ -9,11 +9,13 @@ An interactive map application listing synagogues near the user or given any par
 - Search box will find results by name, city or state, including partials and case insensitive
 - Filter by different movements. Currently fetches all movements from the database to generate a list. This data needs to be normalized, and could probably be made static to reduce network traffic
 - If user has location services, the application will run a search based on the name of their town (reverse geocode via mapbox).
+- Currently set to a max results per load of 10. If additional results are present, will render a load more button which will fetch the next 10 results from the database
   
 ## To Do
 - Searching
-  - Paginate results, allow for sorting by differnet fields
-  - Move the filter-by-movement dropdown to a nicer looking menu and allow for selecting of multiple options
+  - Allow for sorting by different fields
+  - Filters should take multiple options
+  - Allow users to select number results per page
 - Geoloation
   - Handle errors in reverse geocode requests, allow for auto searching beyond just their town
   - Geocode addresses and link to map
