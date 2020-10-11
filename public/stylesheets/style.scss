@@ -45,9 +45,11 @@ footer {
     border-radius: 1rem;
 }
 
-#results-info {
+#results-info, #map-container, #about-container{
+    padding-top: 1rem;
+    display: flex;
     align-self: center;
-    align-items: center;
+    justify-content: center;
     width: 90vw;
 }
 

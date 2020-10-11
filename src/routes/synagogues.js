@@ -1,5 +1,6 @@
 const express = require('express');
 const router = new express.Router();
+const geocode = require('../utils/geolocation.js');
 const Synagogue = require('../models/synagogues.js');
 
 // Get routes for main pages
@@ -58,4 +59,14 @@ router.get('/synagogues/:id', async (req,res) => {
     }
 })
 
+// Get route for location based on coordinates
+router.get('/location', async ( req, res ) => {
+    const results = await geocode((encodeURIComponent(req.query.lon) + ',' + encodeURIComponent(req.query.lat)), 
+        data => {
+            const city = data[3].text;
+            const state = data[4].text;
+            res.send({ city, state })
+        }
+    )
+})
 module.exports = router;

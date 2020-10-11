@@ -1,6 +1,7 @@
 const resultsInfo = document.getElementById('results-info');
 const searchForm = document.getElementById('search-box');
 const movementFilter = document.getElementById('movement-filter');
+const resultsList = document.getElementById('search-results-list');
 
 // Listen for change on the movements filter dropdown, run search
 movementFilter.addEventListener('change', e => {
@@ -21,7 +22,9 @@ document.getElementById('search-form')
 // On page load, find all movement names listed in the database and populate the filters dropdown with that info
 // This would be best moved to static data in production which updates only occasionally
 document.addEventListener('DOMContentLoaded', () => {
-    resultsInfo.innerHTML = '<h4>Use the search box or filters</h4>'
+    resultsInfo.innerHTML = `
+        <h5>Enable location services or use the search bar to find shuls anywhere in the US (RoW coming soon!)</h5>
+    `
     searchForm.value = '';
     fetch('/synagogues')
         .then( res => res.json() )
@@ -41,6 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 movementFilter.appendChild(option);
             });
         });
+
+    // Try using browser geoloaction to determine user's current location
+    navigator.geolocation.getCurrentPosition(({ coords } = {}) => {
+        const { latitude, longitude } = coords;
+        geocode({ latitude, longitude })
+    })
 });
 
 // Search function. Accepts a string as a search term and check the filters element for its value.
@@ -61,14 +70,15 @@ const runSearch = search => {
         .then( res => res.json() )
         .then( synagogues => {
             // Get results list DOM element and reset
-            const resultsList = document.getElementById('search-results-list');
             resultsList.innerText = '';
 
             // Print number of results found
             if ( synagogues.length === 0 ) {
-                return resultsInfo.innerHTML = `<h5>No results found.</h5>`
+                return resultsInfo.innerHTML = `<h5>No results found in ${search}.</h5>`
             } else {
-                resultsInfo.innerHTML = `<h5>${synagogues.length} results.</h5>`
+                resultsInfo.innerHTML = search.length > 0 ? 
+                    `<h5>${synagogues.length} results in ${search}.</h5>` :
+                    `<h5>Showing ${synagogues.length} results</h5>`
             };
 
             // Create a bootstrap card element for each result and append
@@ -98,4 +108,13 @@ const runSearch = search => {
         <p>${err}</p>
         `
     }
-}
+};
+
+// Use the browser geocode api to send user's coords to local server
+const geocode = ( coords, callback ) => {
+    fetch(`http://localhost:3000/location?lat=${coords.latitude}&lon=${coords.longitude}`)
+        .then( res => res.json() )
+        .then( ({city, state}) => {
+            runSearch(city);
+        })
+};
