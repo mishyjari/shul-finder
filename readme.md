@@ -10,7 +10,8 @@ An interactive map application listing synagogues near the user or given any par
 - Filter by different movements. Currently fetches all movements from the database to generate a list. This data needs to be normalized, and could probably be made static to reduce network traffic
 - If user has location services, the application will run a search based on the name of their town (reverse geocode via mapbox).
 - Currently set to a max results per load of 10. If additional results are present, will render a load more button which will fetch the next 10 results from the database
-- Filters menu will actively filter by movement name. If the location was provided by geolocation, search will be reset (address this!)
+- Filters menu will actively filter by movement name. 
+- When an active search is present, a span containing an x will render to reset that search
   
 ## To Do
 - Searching

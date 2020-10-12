@@ -5,9 +5,16 @@ const resultsList = document.getElementById('search-results-list');
 const buttonContainer = document.getElementById('load-more');
 const resultsPerPage = document.getElementById('results-per-page');
 const resetSearch = document.getElementById('reset-search');
+const selectedFilters = document.getElementById('selected-filters');
 
 // Listen for change on the movements filter dropdown, run search
 movementFilter.addEventListener('change', e => {
+    if ( e.target.checked ){
+        selectedFilters.appendChild(createSelectedFilterTab(e.target.value))
+    }
+    else {
+        selectedFilters.removeChild(document.getElementById(`filter-tab-${e.target.value}`))
+    }
     runSearch(searchForm.value)
 });
 
@@ -26,7 +33,27 @@ resultsPerPage.addEventListener('change', e => {
     runSearch(searchForm.value)
 });
 
+// Function to create a selected filter tab for the selected filters display
+const createSelectedFilterTab = filterName => {
+    const filterTab = document.createElement('span');
+    filterTab.setAttribute('id', `filter-tab-${filterName}`);
+    filterTab.setAttribute('class', 'filter-tab');
+    filterTab.innerHTML = `<strong>${filterName}</strong>`
+    
+    const removeFilterButton = document.createElement('span');
+    removeFilterButton.setAttribute('id', `remove-filter-${filterName}`);
+    removeFilterButton.setAttribute('class', 'remove-button');
+    removeFilterButton.innerHTML = '&times';
+    
+    filterTab.appendChild(removeFilterButton)    
 
+    removeFilterButton.addEventListener('click', () => {
+        filterTab.remove();
+        document.getElementById(`filter-${filterName}`).checked = false;
+        runSearch();
+    })
+    return filterTab;
+}
 
 // On page load, find all movement names listed in the database and populate the filters dropdown with that info
 // This would be best moved to static data in production which updates only occasionally
@@ -120,8 +147,11 @@ const runSearch = (search=searchForm.value, persist=false, skip=0, limit=parseIn
                     `<h5>Showing ${limit+skip > count ? count : limit+skip} of ${count} results for <em>${search}</em></h5>` :
                     `<h5>Showing ${limit+skip} of ${count} results</h5>`;
             };
-                        const reset = document.createElement('span');
+
+            // Create button to reset search;
+            const reset = document.createElement('span');
             reset.setAttribute('id', 'reset-search');
+            reset.setAttribute('class', 'remove-button');
             resultsInfo.appendChild(reset);
             reset.innerHTML = '&times';
             if ( searchForm.value.length === 0 ) {
