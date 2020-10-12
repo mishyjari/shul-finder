@@ -3,7 +3,8 @@ const searchForm = document.getElementById('search-box');
 const movementFilter = document.getElementById('filters');
 const resultsList = document.getElementById('search-results-list');
 const buttonContainer = document.getElementById('load-more');
-
+const resultsPerPage = document.getElementById('results-per-page');
+const resetSearch = document.getElementById('reset-search');
 
 // Listen for change on the movements filter dropdown, run search
 movementFilter.addEventListener('change', e => {
@@ -19,6 +20,13 @@ searchForm.addEventListener("input", e => {
 // Prevent page refresh on form submit
 document.getElementById('search-form')
     .addEventListener('submit', e => e.preventDefault());
+
+// Listen for change in results per page box
+resultsPerPage.addEventListener('change', e => {
+    runSearch(searchForm.value)
+});
+
+
 
 // On page load, find all movement names listed in the database and populate the filters dropdown with that info
 // This would be best moved to static data in production which updates only occasionally
@@ -44,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
             movements.forEach(type => {
                 const option = document.createElement('div');
                 option.innerHTML = `
-                    <input type='checkbox' value='${type}' name = '${type}'/>
-                    <label for='${type}'>${type}</label>
+                    <input type='checkbox' value='${type}' id='filter-${type}' name='${type}'/>
+                    <label for='filter-${type}'>${type}</label>
                     <br />
                 `;
                 movementFilter.appendChild(option)
@@ -56,11 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
     navigator.geolocation.getCurrentPosition(({ coords } = {}) => {
         const { latitude, longitude } = coords;
         geocode({ latitude, longitude })
-    })
+    });
+
+
 });
 
 // Search function. Accepts a string as a search term and check the filters element for its value.
-const runSearch = (search, persist=false, skip=0, limit=10) => {
+const runSearch = (search=searchForm.value, persist=false, skip=0, limit=parseInt(resultsPerPage.value)) => {
     let filters = [];
     Array.from(movementFilter.children).forEach(option => {
         if ( option.firstElementChild.checked ) {
@@ -104,12 +114,23 @@ const runSearch = (search, persist=false, skip=0, limit=10) => {
             
             // Print number of results found
             if ( synagogues.length === 0 ) {
-                return resultsInfo.innerHTML = `<h5>No results found in ${search}.</h5>`
+                return resultsInfo.innerHTML = `<h5>No results found for ${search}.</h5>`
             } else {
                 resultsInfo.innerHTML = search.length > 0 ? 
-                    `<h5>${count} results in ${search}.</h5>` :
-                    `<h5>Showing ${count} results</h5>`
+                    `<h5>Showing ${limit+skip > count ? count : limit+skip} of ${count} results for <em>${search}</em></h5>` :
+                    `<h5>Showing ${limit+skip} of ${count} results</h5>`;
             };
+                        const reset = document.createElement('span');
+            reset.setAttribute('id', 'reset-search');
+            resultsInfo.appendChild(reset);
+            reset.innerHTML = '&times';
+            if ( searchForm.value.length === 0 ) {
+                reset.setAttribute('hidden', 'hidden')
+            }
+            reset.addEventListener('click', () => {
+                searchForm.value = ''
+                runSearch();
+            })
 
             // Create a bootstrap card element for each result and append
             synagogues.forEach(synagogueData => {
@@ -159,6 +180,7 @@ const geocode = ( coords, callback ) => {
     fetch(`http://localhost:3000/location?lat=${coords.latitude}&lon=${coords.longitude}`)
         .then( res => res.json() )
         .then( ({city, state}) => {
-            runSearch(city);
+            searchForm.value = city;
+            runSearch()
         })
 };

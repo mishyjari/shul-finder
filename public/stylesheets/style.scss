@@ -34,10 +34,16 @@ footer {
     }
 }
 
-#filters {
-
+#results-options {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    #results-per-page {
+        margin-left: .5rem;
+        font-size: .8rem;
+        padding: .2rem;
+    }
 }
-
 #search-box {
     border-radius: 1rem;
     padding-left: .5rem;
@@ -54,7 +60,17 @@ footer {
     display: flex;
     align-self: center;
     justify-content: center;
+    align-items: center;
     width: 90vw;
+    #reset-search {
+        height: 100%;
+        color: red;
+        padding-bottom: .2rem;
+        &:hover {
+            cursor: pointer;
+    
+        }
+    }
 }
 
 #load-more {
