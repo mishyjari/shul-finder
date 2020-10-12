@@ -34,6 +34,11 @@ footer {
     }
 }
 
+#close-filters-menu {
+    color: $fgLight;
+    opacity: 1;
+}
+
 #results-options {
     width: 100%;
     display: flex;
@@ -119,7 +124,7 @@ div {
     }
 }
 .modal .modal-dialogue .modal-content {
-    opacity: .6;
+    opacity: .8;
     background-color: $bgDark;
     color: $fgLight;
     position: fixed;
