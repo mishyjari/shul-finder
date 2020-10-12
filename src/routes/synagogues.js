@@ -20,24 +20,38 @@ router.get('/about', (req,res) => {
 // Query params will accept search=(name, city, or state) and/or filters=movement
 // Queries are inclusive and case insenstive... 'elohim' will return mathces for 'Beth Elohim', etc
 router.get('/synagogues', async ( req, res ) => {
-    console.log(req.query)
+    
     try {
         // Store query params
         const query = req.query.search || '';
         const filters = req.query.filters || '';
+
+
+
         const dbSearch = {$and: [
             {$or: [
                 { city: { $regex: `.*(?i)${query}.*` }},
                 { name: { $regex: `.*(?i)${query}.*` }},
                 { state: { $regex: `.*(?i)${query}.*` }}
             ]},
-            {
-               movement: { $regex: `.*(?i)${filters}.*` }
-            }
+            
         ]};
+
+        // If filters are provided, add include in db query
+        if ( filters.length > 0 ) {
+            dbSearch['$and'].push({
+                movement: { $in: filters.split(',') }
+            })
+        }
+
 
         // Total entries returned
         const count = await Synagogue.countDocuments(dbSearch)
+
+        // Set limit to count if limit == all
+        if ( req.query.limit === 'all' ) {
+            req.query.limit = count;
+        }
 
         const synagogues = query || filters
             // Handle db query with args

@@ -1,14 +1,13 @@
 const resultsInfo = document.getElementById('results-info');
 const searchForm = document.getElementById('search-box');
-const movementFilter = document.getElementById('movement-filter');
+const movementFilter = document.getElementById('filters');
 const resultsList = document.getElementById('search-results-list');
 const buttonContainer = document.getElementById('load-more');
 
 
 // Listen for change on the movements filter dropdown, run search
 movementFilter.addEventListener('change', e => {
-    const search = searchForm.value.trim();
-    runSearch(search)
+    runSearch(searchForm.value)
 });
 
 // Listen for change on the search box, run search
@@ -28,9 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <h5>Enable location services or use the search bar to find shuls anywhere in the US (RoWr coming soon!)</h5>
     `
     searchForm.value = '';
-    fetch('/synagogues')
+    fetch('/synagogues?limit=all')
         .then( res => res.json() )
         .then( ({synagogues}) => {
+
+            // Fetch movement names from db and populate array
             let movements = [];
             synagogues.forEach(entry => {
                 // Confirm uniqeness and push to array
@@ -38,13 +39,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     movements.push(entry.movement);
                 }
             });
+            
+            // Loop over movement names and create a checkbox for each
             movements.forEach(type => {
-                // Create option element and append to the dropdown
-                let option = document.createElement('option');
-                option.setAttribute('value', type);
-                option.innerText = type
-                movementFilter.appendChild(option);
-            });
+                const option = document.createElement('div');
+                option.innerHTML = `
+                    <input type='checkbox' value='${type}' name = '${type}'/>
+                    <label for='${type}'>${type}</label>
+                    <br />
+                `;
+                movementFilter.appendChild(option)
+            })
         });
 
     // Try using browser geoloaction to determine user's current location
@@ -56,7 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Search function. Accepts a string as a search term and check the filters element for its value.
 const runSearch = (search, persist=false, skip=0, limit=10) => {
-    const filters = movementFilter.value;
+    let filters = [];
+    Array.from(movementFilter.children).forEach(option => {
+        if ( option.firstElementChild.checked ) {
+            filters.push(option.firstElementChild.name)
+        }
+    });
+    filters = filters.join(',');
+    console.log(filters)
 
     // Create query string
     let query = search ? `synagogues?search=${search}` : `synagogues?`; 
@@ -75,8 +87,8 @@ const runSearch = (search, persist=false, skip=0, limit=10) => {
 
     // Use the URL class to create a properly formatted query
     const url = new URL(`${this.location.origin}/${query}`)
-
     console.log(url)
+
 
     try {
         fetch(url.pathname + url.search)
@@ -118,6 +130,7 @@ const runSearch = (search, persist=false, skip=0, limit=10) => {
                 resultsList.appendChild(synagogueCard)
             });
 
+            // If results overflow limit, append 'show more' button
             if ( count > limit && skip+limit < count ) {
                 const moreButton = document.createElement('button');
                 moreButton.setAttribute('class', 'btn btn-outline-secondary');
