@@ -3,6 +3,7 @@ const path = require('path');
 require('./db/mongoose.js');
 const Synagogue = require('./models/synagogues.js');
 const synagoguesRouter = require('./routes/synagogues.js');
+const mapsRouter = require('./routes/map.js');
 const hbs = require('hbs');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,6 +16,7 @@ const partialsPath = path.join(__dirname, '../views/partials');
 
 app.use(express.static(publicPath));
 app.use(synagoguesRouter);
+app.use(mapsRouter);
 app.use(express.json());
 
 // Set view engine
