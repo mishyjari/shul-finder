@@ -74,7 +74,7 @@ router.get('/synagogues', async ( req, res ) => {
 router.get('/synagogues/:id', async (req,res) => {
     try {
         const synagogue = await Synagogue.findById(req.params.id);
-        res.render('show', { synagogue })
+        res.send({ synagogue })
     }
     catch ( err ) {
         console.log(err)

@@ -66,21 +66,54 @@ const createResetSearchButton = () => {
 };
 
 // Create bootstrap card for synagogue results
-const createSynagogueCard = ({ name, movement, address, city, state, url, _id }) => {
+const createSynagogueCard = ({ name, movement, address, city, state, url, _id, phone }) => {
     const synagogueCard = document.createElement('div');
-    synagogueCard.setAttribute('class', 'card')
+    Object.assign(synagogueCard, {
+        class: 'accordion',
+        id: `card-${_id}`
+    });
+
     synagogueCard.innerHTML = `
-        <div class='card-body'>
-            <h5 class='card-title'>${name}</h5>
-            <h6 class='card-title'>${movement}</h5>
-            <p class='card=text'>
-                ${address}, <br />
-                ${city}, ${state}
-            </p>
-            <a href=${url} class='btn btn-outline-primary'>Website</a>
-            <a href='/synagogues/${_id}' class='btn btn-outline-info'>Details</a>
+        <div class='card'>
+            <div class='card-header' id='card-header-${_id}' data-toggle='collapse' data-target='#card-details-${_id}' aria-expanded='false' aria-controls='card-details-${_id}'>
+                <h5>${name}</h5>
+                <h6><em>${city}, ${state}</em> - <strong>${movement}</strong></h6>
+            </div>
+
+            <div class='collapse' data-toggle='collapse' id='card-details-${_id}' aria-labelledby='card-header=${_id}' data-parent='#card-header-${_id}'>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col card-details-property-col'>
+                            Address:
+                        </div>
+                        <div class='col card-details-info-col'>
+                            ${address}<br />
+                            ${city}, ${state}
+                        </div>
+                    </div>
+
+                    <div class='row'>
+                        <div class='col card-details-property-col'>
+                            Phone:
+                        </div>
+                        <div class='col card-details-info-col'>
+                            ${phone}
+                        </div>
+                    </div>
+
+                    <div class='row'>
+                        <div class='col card-details-property-col'>
+                            Website:
+                        </div>
+                        <div class='col card-details-info-col'>
+                            <a href='${url}' target='_blank'>link</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    `;
+    `
+
     return synagogueCard;
 };
 
@@ -104,4 +137,9 @@ const createShowMoreButton = ( count, limit, skip, search=searchForm.value ) => 
         moreButton.innerText = 'End of Results'
     };
     return moreButton;
+}
+
+// Create modal for synagogue details view
+const createSynagogueModal = data => {
+    console.log(data)
 }

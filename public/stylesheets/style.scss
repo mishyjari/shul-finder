@@ -132,3 +132,26 @@ div {
     width: 30rem;
     height: 100vh;
 }
+
+.card-header {
+    text-align: center;
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.card-details-property-col {
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    font-weight: bold;
+}
+
+.card-details-info-col {
+    text-overflow: ellipsis;
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 4;
+}
