@@ -109,6 +109,7 @@ const createSynagogueCard = ({ name, movement, address, city, state, url, _id, p
                             <a href='${url}' target='_blank'>link</a>
                         </div>
                     </div>
+                    <a href='http://localhost:3000/synagogues/${_id}/coords'>Coordinates</a>
                 </div>
             </div>
         </div>

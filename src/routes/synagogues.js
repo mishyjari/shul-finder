@@ -2,6 +2,7 @@ const express = require('express');
 const router = new express.Router();
 const geocode = require('../utils/geolocation.js');
 const Synagogue = require('../models/synagogues.js');
+const fs = require('fs')
 
 // Get routes for main pages
 router.get('/', (req,res) => {
@@ -85,10 +86,48 @@ router.get('/synagogues/:id', async (req,res) => {
 router.get('/location', async ( req, res ) => {
     const results = await geocode((encodeURIComponent(req.query.lon) + ',' + encodeURIComponent(req.query.lat)), 
         data => {
-            const city = data[3].text;
-            const state = data[4].text;
-            res.send({ city, state })
+            try {
+                const city = data[3].text;
+                const state = data[4].text;
+                res.send({ city, state })
+            }
+            catch (err) {
+                res.send({ data, err })
+            }
+            
         }
     )
+});
+
+router.get('/lookup', async ( req, res ) => {
+    await geocode((encodeURIComponent(req.query.search)), 
+        data => {
+            try {
+                res.send({
+                    data
+                })
+            }
+            catch (err) {
+                res.send({ data, err })
+            }
+        }
+    ) 
+});
+
+router.get('/synagogues/:id/coords', async ( req, res ) => {
+    const shul = await Synagogue.findById( req.params.id )
+    const search = `${shul.address} ${shul.city} ${shul.state} ${shul.zip}`;
+
+    await geocode(search, 
+    data => {
+        try {
+            res.send(data[0].geometry.coordinates)
+        }
+        catch ( err ) {
+            console.log(err)
+        }
+    }
+) 
 })
+
 module.exports = router;

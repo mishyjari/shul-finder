@@ -29,4 +29,40 @@ navigator.geolocation.getCurrentPosition(({ coords } = {}) => {
     }
 });
 
+const shulAnnotation = name => {
+    const div = document.createElement('div');
+    div.innerHTML = `<h1>&times</h1>`;
+    return div;
+};
 
+const search = query => {
+    map.removeAnnotations(map.annotations)
+    fetch(`http://localhost:3000/synagogues?search=${encodeURIComponent(query)}&limit=10`)
+    .then( res => res.json() )
+    .then( ({ synagogues }) => {
+        console.log(synagogues)
+        synagogues.forEach(({ address, city, state, name, _id }) => {
+            fetch(`http://localhost:3000/synagogues/${_id}/coords`)
+                .then( res => res.json() )
+                .then( coords => {
+                    try {
+                        const [longitude, latitude] = coords
+                        map.addAnnotation(
+                            new mapkit.Annotation(
+                                new mapkit.Coordinate(latitude,longitude), 
+                                () => shulAnnotation(name))
+                            )
+                    }
+                    catch ( err ) {
+                        console.log(err)
+                    }
+                })
+        })
+    })
+}
+
+document.getElementById('search-form')
+    .addEventListener('submit', e => {
+        e.preventDefault();
+        search(e.target['search-box'].value)
+    })
