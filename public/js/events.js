@@ -15,6 +15,10 @@ searchForm.addEventListener("input", e => {
     runSearch(search)
 });
 
+searchForm.addEventListener('click', e => {
+    e.target.value = '';
+})
+
 // Prevent page refresh on form submit
 document.getElementById('search-form')
     .addEventListener('submit', e => e.preventDefault());
