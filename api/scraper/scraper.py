@@ -5,9 +5,12 @@
 #### Due to inconsistency in the source's webpages, not all results are included, fix coming! ####
 
 from bs4 import BeautifulSoup
+from geopy.geocoders import Nominatim
 import requests
 import json
-from pymongo import MongoClient 
+from pymongo import MongoClient
+
+geolocator = Nominatim(user_agent="shul-finder")
 
 # Connect to MongoDB
 client = MongoClient('localhost', 27017)
@@ -23,28 +26,39 @@ content = BeautifulSoup(res.content, 'html.parser')
 links = content.findAll('a')
 
 # Find all links pointing to a country or state => ['Country Name', Relative URL]
-countryUrls = [[link.contents[0],link.attrs['href']] for link in links if link.attrs['href'].find('synagogues/C') >= 0]
+countryUrls = [[link.contents[0], link.attrs['href']] for link in links
+               if link.attrs['href'].find('synagogues/C') >= 0]
 
 # US Points to states, fortunately the URLS are sequential, so we can just pull 298-398
-statesUrls = [url for url in countryUrls if int(url[1][-3:]) > 297 and int(url[1][-3:]) < 349]
+statesUrls = [
+    url for url in countryUrls
+    if int(url[1][-3:]) > 297 and int(url[1][-3:]) < 349
+]
 
 # Just focusing on US States:
 
 # Take the relative url for a states page and return the cities and towns [name, url]
+
+
 def visitState(url):
     stateUrl = 'http://www.mavensearch.com' + url
     stateRes = requests.get(stateUrl, timeout=5)
     stateContent = BeautifulSoup(stateRes.content, 'html.parser')
 
-    townUrls = [[link.contents[0],link.attrs['href']] for link in stateContent.findAll('a') if link.attrs['href'].find('synagogues/C') >= 0 and len(link.attrs['href']) > len(url)+2]
+    townUrls = [[link.contents[0], link.attrs['href']]
+                for link in stateContent.findAll('a')
+                if link.attrs['href'].find('synagogues/C') >= 0
+                and len(link.attrs['href']) > len(url) + 2]
     return townUrls
 
+
 # Get all synagogues within a town's page
+
+
 def getSynagogues(url):
     townUrl = 'http://www.mavensearch.com' + url
     townRes = requests.get(townUrl, timeout=5)
     townContent = BeautifulSoup(townRes.content, 'html.parser')
-
 
     # Navigating these tables is tricky since theres very little meta data,
     # Everything must be done relativistically, so there winds up being a lot of bad data,
@@ -53,7 +67,10 @@ def getSynagogues(url):
     # The only cells which will contain a link to /map are data cells for a synagogue
     # Create a list of these cells using these parameters
     links = townContent.findAll('a')
-    synagogueTables = [link.parent.parent.parent.parent for link in links if link.attrs['href'].find("/synagogues/map/") >= 0]
+    synagogueTables = [
+        link.parent.parent.parent.parent for link in links
+        if link.attrs['href'].find("/synagogues/map/") >= 0
+    ]
 
     synagogues = []
     for synagogue in synagogueTables:
@@ -66,12 +83,20 @@ def getSynagogues(url):
         # Using a try..except to handle compilation errors from bad data
         try:
             synagogueData = {
-                'name': body[0].contents[0].strip() or '',
-                'url': body[1].a['href'].strip() or '',
-                'address': body[2].contents[0].strip() or '',
-                'zip': synagogue.findAll('a', href=url)[0].parent.contents[1].strip() or '',
-                'phone': data.pop().contents[0].split("\n")[0].replace('Tel: ', '').strip() or '',
-                'movement': data[-1].contents[0].strip() or '',
+                'name':
+                body[0].contents[0].strip() or '',
+                'url':
+                body[1].a['href'].strip() or '',
+                'address':
+                body[2].contents[0].strip() or '',
+                'zip':
+                synagogue.findAll('a', href=url)[0].parent.contents[1].strip()
+                or '',
+                'phone':
+                data.pop().contents[0].split("\n")[0].replace(
+                    'Tel: ', '').strip() or '',
+                'movement':
+                data[-1].contents[0].strip() or '',
             }
 
             for pair in synagogueData.items():
@@ -87,6 +112,7 @@ def getSynagogues(url):
 
     return synagogues
 
+
 # Use this code to create database entries
 for state in statesUrls:
     stateName, stateUrl = state[0], state[1]
@@ -98,42 +124,61 @@ for state in statesUrls:
             townName, townUrl = town[0], town[1]
             synagogues = getSynagogues(townUrl)
             for synagogue in synagogues:
+
+                addr = (synagogue['address'] + ' ' + townName + ' ' +
+                        stateName).strip()
+
+                location = geolocator.geocode(addr)
+
+                print(location)
+
                 res = synagoguesEntries.insert_one({
-                    'name': synagogue['name'],
-                    'url': synagogue['url'],
-                    'movement': synagogue['movement'],
-                    'phone': synagogue['phone'],
-                    'zip': synagogue['zip'],
-                    'address': synagogue['address'],
-                    'state': stateName,
-                    'city': townName,
+                    'latitude':
+                    location.latitude,
+                    'longitude':
+                    location.longitude,
+                    'name':
+                    synagogue['name'],
+                    'url':
+                    synagogue['url'],
+                    'movement':
+                    synagogue['movement'],
+                    'phone':
+                    synagogue['phone'],
+                    'zip':
+                    synagogue['zip'],
+                    'address':
+                    synagogue['address'],
+                    'state':
+                    stateName,
+                    'city':
+                    townName,
                 })
-                print('Inserted: {0}'.format(res.inserted_id))
+                # print('Inserted: {0}'.format(res.inserted_id))
         except:
             print('Error')
             print(town)
 
 # Use this code to dump a JSON file
-usSynagogues = {}
-for state in statesUrls:
-    synagogues = []
+# usSynagogues = {}
+# for state in statesUrls:
+#     synagogues = []
 
-    towns = visitState(state[1])
+#     towns = visitState(state[1])
 
-    for town in towns:
-        try:
-            synagogueData = {
-                town[0]: getSynagogues(town[1])
-            }
-            synagogues.append(synagogueData)
-        except:
-            synagogues.append({'ERROR': town})
+#     for town in towns:
+#         try:
+#             synagogueData = {
+#                 town[0]: getSynagogues(town[1])
+#             }
+#             synagogues.append(synagogueData)
+#         except:
+#             synagogues.append({'ERROR': town})
 
-    try:
-        usSynagogues[state[0]].append(synagogues)
-    except:
-        usSynagogues[state[0]] = [synagogues]
+#     try:
+#         usSynagogues[state[0]].append(synagogues)
+#     except:
+#         usSynagogues[state[0]] = [synagogues]
 
-
-with open('synagogues.json', 'w') as outfile:
-    json.dump(usSynagogues, outfile)
+# with open('synagogues.json', 'w') as outfile:
+#     json.dump(usSynagogues, outfile)

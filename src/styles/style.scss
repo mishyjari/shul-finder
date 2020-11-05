@@ -1,0 +1,42 @@
+@import "../../node_modules/bootstrap/scss/bootstrap";
+@import './mixins';
+@import './variables';
+@import './header';
+@import './mixins';
+
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: $bg-light;
+    color: $fg-dark;
+}
+
+.App {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: space-between;
+
+    main {
+        flex-grow: 2;
+        margin: 2em;
+        padding: 1em;
+        border-radius: 1em;
+        background-color: $main-bg;
+        box-shadow: inset 1px 2px 6px $shadow-medium;
+
+    }
+}
+
+#map-container {
+    height: 100%;
+
+}
+
+.synagogue-annotation {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 2rem;
+    background-color: red;
+}

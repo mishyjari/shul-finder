@@ -1,0 +1,21 @@
+- Searching:
+  - One input to search any field
+- Database:
+  - Normalize data input
+  - Add keys for coords 
+- Scraper:
+  - Output erroneous data, automate what can be fixed and manually fix what cant
+  - Build out support for RoW
+- Geolocation:
+  - Show all results near user
+- Geocoding:
+  - Take address and geocode coords
+  - Can be externally linked to a map for now
+- Maps
+  - Integrate apple mapkit, markers for shuls
+  - Work with geolocation to give users poisition
+- User features 
+  - Filters
+  - Add shul (needs confirmation)
+  - Mobile responsive
+  - Browse
