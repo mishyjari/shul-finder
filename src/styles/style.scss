@@ -1,4 +1,4 @@
-@import "../../node_modules/bootstrap/scss/bootstrap";
+// @import "../../node_modules/bootstrap/scss/bootstrap";
 @import './mixins';
 @import './variables';
 @import './header';
@@ -39,4 +39,21 @@ body {
     height: 1rem;
     border-radius: 2rem;
     background-color: red;
+}
+
+#accordion-container {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+#map-fluid {
+    border: 1px solid blue;
+    flex-grow: 5;
+    height: 100%;
+}
+
+#list-fluid {
+    border: 1px solid red;
+    height: 100%;
 }

@@ -1,5 +1,27 @@
 import { Synagogue } from '../../interfaces/interfaces';
 
+interface Coords {
+  latitude: number;
+  longitude: number;
+}
+
+export const isInVisibleMapRect = (
+  { latitude, longitude }: Coords,
+  {
+    eastLongitude,
+    westLongitude,
+    northLatitude,
+    southLatitude,
+  }: mapkit.BoundingRegion
+): boolean => {
+  return (
+    latitude < northLatitude &&
+    latitude > southLatitude &&
+    longitude < westLongitude &&
+    longitude > eastLongitude
+  );
+};
+
 export const synagogueAnnotation = (
   synagogue: Synagogue
 ): mapkit.MarkerAnnotation => {

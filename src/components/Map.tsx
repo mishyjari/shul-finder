@@ -33,6 +33,8 @@ const Map = (): JSX.Element => {
         map.setRegionAnimated(region);
       } catch {
         console.log('Error setting location');
+      } finally {
+        console.log(map.region.toBoundingRegion());
       }
     },
     (err: PositionError) => {
