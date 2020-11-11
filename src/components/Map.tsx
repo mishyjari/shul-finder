@@ -1,22 +1,17 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { ResultsContext } from '../contexts/ResultsContext';
-import { Synagogue, ResultsContextInterface } from '../interfaces/interfaces';
+import { MapContext } from '../contexts/MapContext';
+import {
+  Synagogue,
+  ResultsContextInterface,
+  MapContextInterface,
+} from '../interfaces/interfaces';
 import { synagogueAnnotation, userAnnotation } from './annotations/annotations';
 
 require('apple-mapkit-js');
 
-const Map = (): JSX.Element => {
-  mapkit.init({
-    authorizationCallback: function (done) {
-      fetch('gettoken')
-        .then(res => res.text())
-        .then(done);
-    },
-  });
-
-  const [map, setMap]: any = useState(new mapkit.Map('root'));
-
+const Map = ({ map, setMap, updateMap }: MapContextInterface): JSX.Element => {
   map.isScrollEnabled = true;
   map.isZoomEnabled = true;
 
@@ -33,8 +28,6 @@ const Map = (): JSX.Element => {
         map.setRegionAnimated(region);
       } catch {
         console.log('Error setting location');
-      } finally {
-        console.log(map.region.toBoundingRegion());
       }
     },
     (err: PositionError) => {
@@ -48,7 +41,7 @@ const Map = (): JSX.Element => {
   );
 
   useEffect(() => {
-    setMap(new mapkit.Map('map-container'));
+    updateMap('map-container');
     return () => map.destroy();
   }, []);
 

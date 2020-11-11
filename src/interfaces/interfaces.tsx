@@ -12,3 +12,9 @@ export interface ResultsContextInterface {
   results: Synagogue[];
   setResults(results: Synagogue[]): void;
 }
+
+export interface MapContextInterface {
+  map: mapkit.Map;
+  setMap(): void;
+  updateMap(el: string): void;
+}

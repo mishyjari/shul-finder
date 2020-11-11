@@ -15,10 +15,10 @@ export const isInVisibleMapRect = (
   }: mapkit.BoundingRegion
 ): boolean => {
   return (
-    latitude < northLatitude &&
-    latitude > southLatitude &&
-    longitude < westLongitude &&
-    longitude > eastLongitude
+    Math.abs(latitude) < Math.abs(northLatitude) &&
+    Math.abs(latitude) > Math.abs(southLatitude) &&
+    Math.abs(longitude) < Math.abs(westLongitude) &&
+    Math.abs(longitude) > Math.abs(eastLongitude)
   );
 };
 

@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { ResultsContext } from '../contexts/ResultsContext';
-import { ResultsContextInterface, Synagogue } from '../interfaces/interfaces';
+import { MapContext } from '../contexts/MapContext';
+import { isInVisibleMapRect } from './annotations/annotations';
+import {
+  MapContextInterface,
+  ResultsContextInterface,
+  Synagogue,
+} from '../interfaces/interfaces';
 
 const Search = (): JSX.Element => {
   const [search, setSearch] = useState('');
@@ -10,20 +16,33 @@ const Search = (): JSX.Element => {
       <ResultsContext.Consumer>
         {(context: ResultsContextInterface) => {
           return (
-            <button
-              type='submit'
-              onClick={() => {
-                console.log(context);
-                handleSearch(
-                  search,
-                  ({ synagogues }: { synagogues: Synagogue[] }) => {
-                    context.setResults(synagogues);
-                  }
+            <MapContext.Consumer>
+              {({ map, setMap, updateMap }: any) => {
+                return (
+                  <button
+                    type='submit'
+                    onClick={() => {
+                      const boundingRegion = map.region.toBoundingRegion();
+                      handleSearch(
+                        search,
+                        ({ synagogues }: { synagogues: Synagogue[] }) => {
+                          context.setResults(
+                            synagogues.filter(({ latitude, longitude }: any) =>
+                              isInVisibleMapRect(
+                                { latitude, longitude },
+                                boundingRegion
+                              )
+                            )
+                          );
+                        }
+                      );
+                    }}
+                  >
+                    Go
+                  </button>
                 );
               }}
-            >
-              Go
-            </button>
+            </MapContext.Consumer>
           );
         }}
       </ResultsContext.Consumer>

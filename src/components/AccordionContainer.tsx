@@ -1,6 +1,8 @@
 import React from 'react';
 import List from './List';
 import Map from './Map';
+import { MapContext } from '../contexts/MapContext';
+require('apple-mapkit-js');
 
 const AccordionContainer = (): JSX.Element => {
   return (
@@ -9,7 +11,9 @@ const AccordionContainer = (): JSX.Element => {
         <List />
       </div>
       <div id='map-fluid'>
-        <Map />
+        <MapContext.Consumer>
+          {(context: any) => <Map {...context} />}
+        </MapContext.Consumer>
       </div>
     </div>
   );
