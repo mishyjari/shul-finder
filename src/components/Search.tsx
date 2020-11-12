@@ -31,6 +31,7 @@ const Search = (): JSX.Element => {
                   <button
                     type='submit'
                     onClick={() => {
+                      map.removeAnnotations(map.annotations);
                       handleSearch(
                         search,
                         ({ synagogues }: any) => {
