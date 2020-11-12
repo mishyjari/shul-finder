@@ -7,6 +7,11 @@ interface Synagogue {
   movement: string;
 }
 
+// const SynagogueListItem = (props: any) => {
+//   console.log(props);
+//   return <div></div>;
+// };
+
 const SynagogueListItem = ({
   name,
   city,

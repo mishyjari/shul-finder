@@ -6,16 +6,20 @@ require('apple-mapkit-js');
 
 const AccordionContainer = (): JSX.Element => {
   return (
-    <div id='accordion-container'>
-      <div id='list-fluid'>
-        <List />
-      </div>
-      <div id='map-fluid'>
-        <MapContext.Consumer>
-          {(context: any) => <Map {...context} />}
-        </MapContext.Consumer>
-      </div>
-    </div>
+    <MapContext.Consumer>
+      {(context: any) => {
+        return (
+          <div id='accordion-container'>
+            <div id='list-fluid'>
+              <List {...context} />
+            </div>
+            <div id='map-fluid'>
+              <Map {...context} />
+            </div>
+          </div>
+        );
+      }}
+    </MapContext.Consumer>
   );
 };
 

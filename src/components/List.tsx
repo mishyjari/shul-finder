@@ -2,21 +2,15 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import SynagogueListItem from './SynagogueListItem';
 import { ResultsContext } from '../contexts/ResultsContext';
-
-interface Synagogue {
-  _id: number;
-  name: string;
-  city: string;
-  state: string;
-  movement: string;
-}
+import { Synagogue } from '../interfaces/interfaces';
+import { isInVisibleMapRect } from './annotations/annotations';
 
 interface ResultsContextInterface {
   results: Synagogue[];
   setResults: any;
 }
 
-const List = (): JSX.Element => {
+const List = ({ map }: any): JSX.Element => {
   return (
     <Table bordered striped hover>
       <thead>
@@ -30,8 +24,13 @@ const List = (): JSX.Element => {
       <tbody>
         <ResultsContext.Consumer>
           {(context: ResultsContextInterface) => {
-            return context.results.map((result: Synagogue) => {
-              return <SynagogueListItem key={result._id} {...result} />;
+            return context.results.map((synagogue: Synagogue) => {
+              const { latitude, longitude } = synagogue;
+              const boundingRegion = map.region.toBoundingRegion();
+              if (isInVisibleMapRect({ latitude, longitude }, boundingRegion)) {
+                return <SynagogueListItem key={synagogue._id} {...synagogue} />;
+              }
+              return null;
             });
           }}
         </ResultsContext.Consumer>

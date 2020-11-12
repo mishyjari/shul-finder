@@ -50,10 +50,13 @@ body {
 #map-fluid {
     border: 1px solid blue;
     flex-grow: 5;
-    height: 100%;
+    height: 80vh;
 }
 
 #list-fluid {
     border: 1px solid red;
-    height: 100%;
+    height: 80vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    width: 20vw;
 }

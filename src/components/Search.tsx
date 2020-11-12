@@ -18,23 +18,25 @@ const Search = (): JSX.Element => {
           return (
             <MapContext.Consumer>
               {({ map, setMap, updateMap }: any) => {
+                map.addEventListener('zoom-end', () => {
+                  handleSearch(
+                    search,
+                    ({ synagogues }: any) => {
+                      context.setResults(synagogues);
+                    },
+                    map
+                  );
+                });
                 return (
                   <button
                     type='submit'
                     onClick={() => {
-                      const boundingRegion = map.region.toBoundingRegion();
                       handleSearch(
                         search,
-                        ({ synagogues }: { synagogues: Synagogue[] }) => {
-                          context.setResults(
-                            synagogues.filter(({ latitude, longitude }: any) =>
-                              isInVisibleMapRect(
-                                { latitude, longitude },
-                                boundingRegion
-                              )
-                            )
-                          );
-                        }
+                        ({ synagogues }: any) => {
+                          context.setResults(synagogues);
+                        },
+                        map
                       );
                     }}
                   >
@@ -49,7 +51,18 @@ const Search = (): JSX.Element => {
     );
   };
 
-  const handleSearch = (query: string, callback: any) => {
+  // const refreshSearchResults = (
+  //   map: mapkit.Map,
+  //   context: ResultsContextInterface
+  // ): void => {
+  //   handleSearch(
+  //     search,
+  //     (synagogues: Synagogue[]) => context.setResults(synagogues),
+  //     map
+  //   );
+  // };
+
+  const handleSearch = (query: string, callback: any, map: mapkit.Map) => {
     try {
       fetch(`synagogues?search=${query}&limit=all`)
         .then(response => response.json())
