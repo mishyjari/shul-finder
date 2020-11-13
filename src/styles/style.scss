@@ -19,6 +19,7 @@ body {
     justify-content: space-between;
 
     main {
+        height: 80vh;
         flex-grow: 2;
         margin: 2em;
         padding: 1em;
@@ -38,7 +39,6 @@ body {
     width: 1rem;
     height: 1rem;
     border-radius: 2rem;
-    background-color: red;
 }
 
 #accordion-container {
@@ -48,15 +48,81 @@ body {
 }
 
 #map-fluid {
-    border: 1px solid blue;
+    border-radius: 1em;
+    margin-left: .25em;
     flex-grow: 5;
-    height: 80vh;
+    height: 100%;
 }
 
 #list-fluid {
-    border: 1px solid red;
-    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1em;
+    height: 100%;
     overflow-y: auto;
     overflow-x: auto;
+    transition: all 200ms ease-in-out 50ms;
+    z-index: 999;
+    align-items: center;
+    box-shadow: inset 0 2px 4px $bg-light;
+}
+
+#toggle-btn {
+    width: 80%;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    margin: 1em;
+    font-size: 1em;
+    background-color: $bg-dark;
+    color: $fg-light;
+    border-radius: 1.5em;
+
+    &:hover {
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 2px 2px 4px $fg-light;
+    }
+}
+
+.expand {
     width: 20vw;
+}
+
+.collapse {
+    width: 3em;
+
+    div {
+        display: none;
+    }
+}
+
+.synagogue-list-item {
+    width: 80%;
+    background-color: $fg-light;
+    color: $fg-dark;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: .5em;
+    padding-bottom: .5em;
+    margin: .5em;
+    border: 1px solid $fg-dark;
+    border-radius: 1em;
+    text-align: center;
+
+    &:hover {
+        box-shadow: inset 2px 2px 4px $fg-dark;
+        cursor: pointer;
+    }
+
+    h5,
+    h6,
+    em {
+        margin: .5em;
+    }
+
+}
+
+.mk-map-view {
+    border-radius: 1.5em;
+    border: 1px solid $bg-dark;
 }

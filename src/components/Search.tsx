@@ -17,7 +17,7 @@ const Search = (): JSX.Element => {
         {(context: ResultsContextInterface) => {
           return (
             <MapContext.Consumer>
-              {({ map, setMap, updateMap }: any) => {
+              {({ map }: any) => {
                 map.addEventListener('zoom-end', () => {
                   handleSearch(
                     search,

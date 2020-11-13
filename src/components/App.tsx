@@ -19,7 +19,6 @@ function App() {
             <main id='main'>
               <Switch>
                 <Route exact path='/' component={AccordionContainer} />
-                <Route path='/map' component={Map} />
                 <Route path='/about'>About</Route>
               </Switch>
             </main>

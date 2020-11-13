@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
 import SynagogueListItem from './SynagogueListItem';
 import { ResultsContext } from '../contexts/ResultsContext';
@@ -11,31 +11,28 @@ interface ResultsContextInterface {
 }
 
 const List = ({ map }: any): JSX.Element => {
+  const [hidden, setHidden] = useState(false);
+
+  const toggleHidden = () => setHidden(!hidden);
+
   return (
-    <Table bordered striped hover>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>City</th>
-          <th>State</th>
-          <th>Movement</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ResultsContext.Consumer>
-          {(context: ResultsContextInterface) => {
-            return context.results.map((synagogue: Synagogue) => {
-              const { latitude, longitude } = synagogue;
-              const boundingRegion = map.region.toBoundingRegion();
-              if (isInVisibleMapRect({ latitude, longitude }, boundingRegion)) {
-                return <SynagogueListItem key={synagogue._id} {...synagogue} />;
-              }
-              return null;
-            });
-          }}
-        </ResultsContext.Consumer>
-      </tbody>
-    </Table>
+    <div id='list-fluid' className={hidden ? 'collapse' : 'expand'}>
+      <button id='toggle-btn' onClick={toggleHidden}>
+        {hidden ? '>>' : 'Hide List'}
+      </button>
+      <ResultsContext.Consumer>
+        {(context: ResultsContextInterface) => {
+          return context.results.map((synagogue: Synagogue) => {
+            const { latitude, longitude } = synagogue;
+            const boundingRegion = map.region.toBoundingRegion();
+            if (isInVisibleMapRect({ latitude, longitude }, boundingRegion)) {
+              return <SynagogueListItem key={synagogue._id} {...synagogue} />;
+            }
+            return null;
+          });
+        }}
+      </ResultsContext.Consumer>
+    </div>
   );
 };
 

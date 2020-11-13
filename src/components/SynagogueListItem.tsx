@@ -19,12 +19,13 @@ const SynagogueListItem = ({
   movement,
 }: Synagogue): JSX.Element => {
   return (
-    <tr>
-      <td>{name}</td>
-      <td>{city}</td>
-      <td>{state}</td>
-      <td>{movement}</td>
-    </tr>
+    <div className='synagogue-list-item'>
+      <h5>{name}</h5>
+      <h6>
+        {city}, {state}
+      </h6>
+      <em>{movement}</em>
+    </div>
   );
 };
 

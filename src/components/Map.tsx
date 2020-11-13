@@ -8,7 +8,6 @@ import {
 } from '../interfaces/interfaces';
 import {
   synagogueAnnotation,
-  userAnnotation,
   isInVisibleMapRect,
 } from './annotations/annotations';
 

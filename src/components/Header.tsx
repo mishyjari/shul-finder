@@ -5,22 +5,24 @@ import Search from './Search';
 const NavList = (): JSX.Element => (
   <nav>
     <ul>
-      <li>
-        <Link to='/'>List</Link>
-      </li>
-      <li>
+      {/* <li>
+        <Link to='/'>Home</Link>
+      </li> */}
+      {/* <li>
         <Link to='/map'>Map</Link>
-      </li>
-      <li>
+      </li> */}
+      {/* <li>
         <Link to='/about'>About</Link>
-      </li>
+      </li> */}
     </ul>
   </nav>
 );
 
 const Header = (): JSX.Element => (
   <header>
-    <h3>ShulFinder</h3>
+    <h3>
+      <Link to='/'>ShulFinder</Link>
+    </h3>
     <NavList />
     <Search />
   </header>
