@@ -16,9 +16,9 @@ const List = ({ map }: any): JSX.Element => {
   const toggleHidden = () => setHidden(!hidden);
 
   return (
-    <div id='list-fluid' className={hidden ? 'collapse' : 'expand'}>
-      <button id='toggle-btn' onClick={toggleHidden}>
-        {hidden ? '>>' : 'Hide List'}
+    <div className={hidden ? 'list-fluid collapse' : 'list-fluid expand'}>
+      <button className='toggle-btn' onClick={toggleHidden}>
+        <span>{hidden ? '>>' : '<<'}</span>
       </button>
       <ResultsContext.Consumer>
         {(context: ResultsContextInterface) => {

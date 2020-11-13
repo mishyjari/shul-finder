@@ -22,7 +22,7 @@ body {
         height: 80vh;
         flex-grow: 2;
         margin: 2em;
-        padding: 1em;
+        //padding: 1em;
         border-radius: 1em;
         background-color: $main-bg;
         box-shadow: inset 1px 2px 6px $shadow-medium;
@@ -55,7 +55,16 @@ body {
 }
 
 #list-fluid {
+    position: relative;
     display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.list-fluid {
+    position: absolute;
+    display: flex;
+    width: 20em;
     flex-direction: column;
     border-radius: 1em;
     height: 100%;
@@ -65,31 +74,75 @@ body {
     z-index: 999;
     align-items: center;
     box-shadow: inset 0 2px 4px $bg-light;
+    background: -webkit-linear-gradient(left, $bg-dark, rgba(255, 255, 255, 0));
 }
 
-#toggle-btn {
-    width: 80%;
+.toggle-btn {
+    width: 90%;
     padding-top: .5em;
     padding-bottom: .5em;
-    margin: 1em;
-    font-size: 1em;
-    background-color: $bg-dark;
+    margin-top: .25em;
+    background-color: rgba(255,
+            255,
+            255,
+            0);
     color: $fg-light;
-    border-radius: 1.5em;
+    font-size: 1.5em;
+    text-shadow: 2px 2px 4px $bg-dark;
+    border-radius: 1em;
+    border: none;
 
     &:hover {
         cursor: pointer;
         font-weight: bold;
-        box-shadow: 2px 2px 4px $fg-light;
-    }
-}
+        box-shadow: inset 2px 2px 4px $fg-dark;
 
-.expand {
-    width: 20vw;
+    }
+
+    .expand {
+        width: 20vw;
+
+    }
 }
 
 .collapse {
     width: 3em;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    border-radius: 1em 0 0 1em;
+
+
+
+    button {
+        cursor: pointer;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        border-radius: .25em;
+        border: none;
+
+        color: $fg-light;
+
+
+        span {
+
+            margin-left: -.5em;
+            font-size: 2em;
+            position: fixed;
+        }
+    }
+
+    &:hover {
+        width: 4em;
+        border: none;
+
+        span {
+            font-weight: 900;
+        }
+    }
 
     div {
         display: none;
@@ -98,7 +151,10 @@ body {
 
 .synagogue-list-item {
     width: 80%;
-    background-color: $fg-light;
+    background-color: rgba(255,
+            255,
+            255,
+            0.8);
     color: $fg-dark;
     padding-left: 1em;
     padding-right: 1em;
@@ -108,6 +164,7 @@ body {
     border: 1px solid $fg-dark;
     border-radius: 1em;
     text-align: center;
+
 
     &:hover {
         box-shadow: inset 2px 2px 4px $fg-dark;
