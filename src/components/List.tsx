@@ -15,6 +15,8 @@ const List = ({ map }: any): JSX.Element => {
 
   const toggleHidden = () => setHidden(!hidden);
 
+  map.addEventListener('region-change-end', () => {});
+
   return (
     <div className={hidden ? 'list-fluid collapse' : 'list-fluid expand'}>
       <button className='toggle-btn' onClick={toggleHidden}>
@@ -22,6 +24,10 @@ const List = ({ map }: any): JSX.Element => {
       </button>
       <ResultsContext.Consumer>
         {(context: ResultsContextInterface) => {
+          map.addEventListener('region-change-end', () => {
+            context.setResults(context.results);
+          });
+
           return context.results.map((synagogue: Synagogue) => {
             const { latitude, longitude } = synagogue;
             const boundingRegion = map.region.toBoundingRegion();

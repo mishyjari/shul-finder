@@ -20,7 +20,7 @@ const MapProvider = (props: any) => {
     },
   });
 
-  const [map, setMap]: [any, any] = useState(new mapkit.Map('root'));
+  const [map, setMap]: [mapkit.Map, any] = useState(new mapkit.Map('root'));
   map.isScrollEnabled = true;
   map.isZoomEnabled = true;
 

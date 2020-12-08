@@ -19,33 +19,43 @@ const Map = ({ updateMap, setMap, map }: MapContextInterface): JSX.Element => {
     return () => setMap();
   }, []);
 
+  const updateAnnotationsOnNewRegion = (
+    context: ResultsContextInterface
+  ): void => {
+    map.annotations = [];
+    const boundingRegion = map.region.toBoundingRegion();
+    context.results
+      .filter((synagogue: Synagogue) => {
+        const idx = map.annotations.findIndex(
+          annotation => annotation.data._id === synagogue._id
+        );
+        const { latitude, longitude } = synagogue;
+        return (
+          idx < 0 && isInVisibleMapRect({ latitude, longitude }, boundingRegion)
+        );
+      })
+      .forEach((synagogue: Synagogue) => {
+        try {
+          const { latitude, longitude } = synagogue;
+
+          if (isInVisibleMapRect({ latitude, longitude }, boundingRegion)) {
+            map.addAnnotation(synagogueAnnotation(synagogue));
+          }
+        } catch (err) {
+          console.log(err);
+          console.log(synagogue);
+        }
+      });
+  };
+
   return (
     <ResultsContext.Consumer>
       {(context: ResultsContextInterface) => {
-        const boundingRegion = map.region.toBoundingRegion();
-        context.results
-          .filter((synagogue: Synagogue) => {
-            const idx = map.annotations.findIndex(
-              annotation => annotation.data._id === synagogue._id
-            );
-            const { latitude, longitude } = synagogue;
-            return (
-              idx < 0 &&
-              isInVisibleMapRect({ latitude, longitude }, boundingRegion)
-            );
-          })
-          .forEach((synagogue: Synagogue) => {
-            try {
-              const { latitude, longitude } = synagogue;
+        updateAnnotationsOnNewRegion(context);
+        map.addEventListener('region-change-end', () =>
+          updateAnnotationsOnNewRegion(context)
+        );
 
-              if (isInVisibleMapRect({ latitude, longitude }, boundingRegion)) {
-                map.addAnnotation(synagogueAnnotation(synagogue));
-              }
-            } catch (err) {
-              console.log(err);
-              console.log(synagogue);
-            }
-          });
         return <div id='map-container'></div>;
       }}
     </ResultsContext.Consumer>
