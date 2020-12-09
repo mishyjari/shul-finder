@@ -1,9 +1,0 @@
-node_modules/
-.DS_Store
-todo.md/
-.vscode
-dist/
-config/
-webpack.congig.js
-src/utils/apiKeys.js
-src/utils/AuthKey_FCHCKTS567.p8

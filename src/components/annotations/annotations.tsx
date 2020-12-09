@@ -1,5 +1,5 @@
 import { Synagogue } from '../../interfaces/interfaces';
-
+import MagenDavid from '../../assets/magen-david.png';
 interface Coords {
   latitude: number;
   longitude: number;
@@ -34,8 +34,17 @@ export const synagogueAnnotation = (
     animates: true,
     calloutEnabled: true,
     clusteringIdentifier: 'synagogue-cluster',
+    glyphImage: {
+      1: MagenDavid,
+      2: MagenDavid,
+      3: MagenDavid,
+    },
   };
-  return new mapkit.MarkerAnnotation(coords, options);
+  const annotation = new mapkit.MarkerAnnotation(coords, options);
+  // annotation.addEventListener('select', () => {
+  //   console.log(annotation.titleVisibility);
+  // });
+  return annotation;
 };
 
 export const userAnnotation = (

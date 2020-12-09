@@ -18,15 +18,6 @@ const Search = (): JSX.Element => {
           return (
             <MapContext.Consumer>
               {({ map }: any) => {
-                map.addEventListener('zoom-end', () => {
-                  handleSearch(
-                    search,
-                    ({ synagogues }: any) => {
-                      context.setResults(synagogues);
-                    },
-                    map
-                  );
-                });
                 return (
                   <button
                     type='submit'

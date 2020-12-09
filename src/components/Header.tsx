@@ -24,7 +24,7 @@ const Header = (): JSX.Element => (
       <Link to='/'>ShulFinder</Link>
     </h3>
     <NavList />
-    <Search />
+    {/* <Search /> */}
   </header>
 );
 

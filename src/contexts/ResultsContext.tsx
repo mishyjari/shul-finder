@@ -1,4 +1,5 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
+import { Synagogue } from '../interfaces/interfaces';
 
 const ResultsContext = createContext({
   results: [],
@@ -7,6 +8,15 @@ const ResultsContext = createContext({
 
 const ResultsProvider = (props: any) => {
   const [results, setResults]: any = useState([]);
+
+  useEffect(() => {
+    fetch('synagogues')
+      .then(res => res.json())
+      .then(synagogues => {
+        setResults(synagogues);
+      });
+  }, []);
+
   return (
     <ResultsContext.Provider value={{ results, setResults }}>
       {props.children}

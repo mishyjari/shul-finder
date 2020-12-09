@@ -39,7 +39,11 @@ const Map = ({ updateMap, setMap, map }: MapContextInterface): JSX.Element => {
           const { latitude, longitude } = synagogue;
 
           if (isInVisibleMapRect({ latitude, longitude }, boundingRegion)) {
-            map.addAnnotation(synagogueAnnotation(synagogue));
+            const annotation: mapkit.MarkerAnnotation = synagogueAnnotation(
+              synagogue
+            );
+
+            map.addAnnotation(annotation);
           }
         } catch (err) {
           console.log(err);

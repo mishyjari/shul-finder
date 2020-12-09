@@ -1,6 +1,6 @@
 {
   "name": "shul-finder",
-  "proxy": "http://localhost:3001/",
+  "proxy": "https://shul-finder.herokuapp.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
