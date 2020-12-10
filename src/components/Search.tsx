@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import { ResultsContext } from '../contexts/ResultsContext';
 import { MapContext } from '../contexts/MapContext';
-import { isInVisibleMapRect } from './annotations/annotations';
-import {
-  MapContextInterface,
-  ResultsContextInterface,
-  Synagogue,
-} from '../interfaces/interfaces';
+import { ResultsContextInterface } from '../interfaces/interfaces';
 
 const Search = (): JSX.Element => {
   const [search, setSearch] = useState('');

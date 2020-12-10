@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Table } from 'react-bootstrap';
 import SynagogueListItem from './SynagogueListItem';
 import { ResultsContext } from '../contexts/ResultsContext';
 import { Synagogue } from '../interfaces/interfaces';

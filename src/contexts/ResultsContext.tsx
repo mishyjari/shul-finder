@@ -1,5 +1,4 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { Synagogue } from '../interfaces/interfaces';
 
 const ResultsContext = createContext({
   results: [],
@@ -10,7 +9,7 @@ const ResultsProvider = (props: any) => {
   const [results, setResults]: any = useState([]);
 
   useEffect(() => {
-    fetch('synagogues')
+    fetch('https://shul-finder.herokuapp.com/synagogues')
       .then(res => res.json())
       .then(synagogues => {
         setResults(synagogues);

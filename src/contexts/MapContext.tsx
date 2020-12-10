@@ -14,7 +14,7 @@ const MapContext = createContext({});
 const MapProvider = (props: any) => {
   mapkit.init({
     authorizationCallback: function (done) {
-      fetch('gettoken')
+      fetch('https://shul-finder.herokuapp.com/gettoken')
         .then(res => res.text())
         .then(done);
     },

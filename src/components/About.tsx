@@ -8,3 +8,5 @@ const About = (): JSX.Element => (
     }}
   </MapContext.Consumer>
 );
+
+export default About;
