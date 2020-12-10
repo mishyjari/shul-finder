@@ -3,6 +3,7 @@ import SynagogueListItem from './SynagogueListItem';
 import { ResultsContext } from '../contexts/ResultsContext';
 import { Synagogue } from '../interfaces/interfaces';
 import { isInVisibleMapRect } from './annotations/annotations';
+// import InfiniteScroll from 'react-infinite-scroller';
 
 interface ResultsContextInterface {
   results: Synagogue[];
@@ -11,10 +12,11 @@ interface ResultsContextInterface {
 
 const List = ({ map }: any): JSX.Element => {
   const [hidden, setHidden] = useState(false);
+  const [displayResults, setDisplayResults] = useState([]);
 
   const toggleHidden = () => setHidden(!hidden);
 
-  map.addEventListener('region-change-end', () => {});
+  // map.addEventListener('region-change-end', () => {});
 
   return (
     <div className={hidden ? 'list-fluid collapse' : 'list-fluid expand'}>

@@ -27,6 +27,21 @@ body {
         background-color: $main-bg;
         box-shadow: inset 1px 2px 6px $shadow-medium;
 
+        .mk-map-view {
+            border-radius: 1.5em;
+            border: 1px solid $bg-dark;
+        }
+    }
+
+    #main-mobile {
+        border-radius: 0;
+
+        margin: 0;
+
+        .mk-map-view {
+            border-radius: 0;
+            border: 1px solid $bg-dark;
+        }
     }
 }
 
@@ -177,9 +192,4 @@ body {
         margin: .5em;
     }
 
-}
-
-.mk-map-view {
-    border-radius: 1.5em;
-    border: 1px solid $bg-dark;
 }
