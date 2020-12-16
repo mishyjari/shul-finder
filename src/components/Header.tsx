@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// import Search from './Search';
+import Search from './Search';
 
 const NavList = (): JSX.Element => (
   <nav>
@@ -24,7 +24,7 @@ const Header = (): JSX.Element => (
       <Link to='/'>ShulFinder</Link>
     </h3>
     <NavList />
-    {/* <Search /> */}
+    <Search />
   </header>
 );
 

@@ -2,39 +2,64 @@ import React, { useState } from 'react';
 import { ResultsContext } from '../contexts/ResultsContext';
 import { MapContext } from '../contexts/MapContext';
 import { ResultsContextInterface } from '../interfaces/interfaces';
+import { format } from 'path';
 
 const Search = (): JSX.Element => {
   const [search, setSearch] = useState('');
 
   const Submit = () => {
     return (
-      <ResultsContext.Consumer>
-        {(context: ResultsContextInterface) => {
+      <MapContext.Consumer>
+        {({ map }: any) => {
           return (
-            <MapContext.Consumer>
-              {({ map }: any) => {
-                return (
-                  <button
-                    type='submit'
-                    onClick={() => {
-                      map.removeAnnotations(map.annotations);
-                      handleSearch(
-                        search,
-                        ({ synagogues }: any) => {
-                          context.setResults(synagogues);
-                        },
-                        map
+            <button
+              type='submit'
+              onClick={() => {
+                map.removeAnnotations(map.annotations);
+                handleSearch(
+                  search,
+                  (error: any, result: any) => {
+                    if (error) console.log(error);
+
+                    console.log(result);
+
+                    const {
+                      formattedAddress,
+                      coordinate,
+                      region,
+                    } = result.results[0];
+
+                    const { latitude, longitude } = coordinate;
+                    const center = new mapkit.Coordinate(latitude, longitude);
+
+                    setSearch(formattedAddress);
+
+                    if (region) {
+                      const { latitudeDelta, longitudeDelta } = region.span;
+                      const span = new mapkit.CoordinateSpan(
+                        latitudeDelta,
+                        longitudeDelta
                       );
-                    }}
-                  >
-                    Go
-                  </button>
+
+                      const coordinateRegion = new mapkit.CoordinateRegion(
+                        center,
+                        span
+                      );
+
+                      map.setRegionAnimated(coordinateRegion, span);
+                    } else {
+                      map.setCenterAnimated(center);
+                    }
+                  },
+                  map
                 );
               }}
-            </MapContext.Consumer>
+            >
+              Go
+            </button>
           );
         }}
-      </ResultsContext.Consumer>
+      </MapContext.Consumer>
     );
   };
 
@@ -51,16 +76,15 @@ const Search = (): JSX.Element => {
 
   const handleSearch = (query: string, callback: any, map: mapkit.Map) => {
     try {
-      fetch(`synagogues?search=${query}&limit=all`)
-        .then(response => response.json())
-        .then(results => {
-          callback(results);
-        })
-        .catch(console.log);
+      const geocode = new mapkit.Geocoder();
+
+      geocode.lookup(query, (err, res) => callback(err, res));
     } catch (err) {
       console.log(err);
     }
   };
+
+  const form = new mapkit.Search({ includeAddresses: true });
 
   return (
     <form onSubmit={e => e.preventDefault()}>
