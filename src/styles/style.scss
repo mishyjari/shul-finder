@@ -45,6 +45,16 @@ body {
     }
 }
 
+.alert {
+    padding: 0;
+    text-align: center;
+
+    h4,
+    p {
+        margin: 0;
+    }
+}
+
 #map-container {
     height: 100%;
 

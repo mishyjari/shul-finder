@@ -6,13 +6,23 @@ import MobileContainer from './MobileContainer';
 import { ResultsProvider } from '../contexts/ResultsContext';
 import { MapProvider } from '../contexts/MapContext';
 import { BrowserView, MobileView } from 'react-device-detect';
-
+import Alert from './Alert';
 import AccordionContainer from './AccordionContainer';
+import ModalIntercept from './ModalIntercept';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
     <div className='App'>
+      <Alert
+        variant='danger'
+        heading='Application under development'
+        text='Dataset is incomplete and limited to the US. More thorough data and features coming soon!'
+      />
       <MapProvider>
+        <ModalIntercept />
+
         <ResultsProvider>
           <Router>
             <Header />

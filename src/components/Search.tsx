@@ -4,7 +4,7 @@ import { MapContext } from '../contexts/MapContext';
 import { ResultsContextInterface } from '../interfaces/interfaces';
 import { format } from 'path';
 
-const Search = (): JSX.Element => {
+const Search = (cb: any): JSX.Element => {
   const [search, setSearch] = useState('');
 
   const Submit = () => {
@@ -21,34 +21,36 @@ const Search = (): JSX.Element => {
                   (error: any, result: any) => {
                     if (error) console.log(error);
 
-                    console.log(result);
+                    try {
+                      const {
+                        formattedAddress,
+                        coordinate,
+                        region,
+                      } = result.results[0];
 
-                    const {
-                      formattedAddress,
-                      coordinate,
-                      region,
-                    } = result.results[0];
+                      const { latitude, longitude } = coordinate;
+                      const center = new mapkit.Coordinate(latitude, longitude);
 
-                    const { latitude, longitude } = coordinate;
-                    const center = new mapkit.Coordinate(latitude, longitude);
+                      setSearch(formattedAddress);
 
-                    setSearch(formattedAddress);
+                      if (region) {
+                        const { latitudeDelta, longitudeDelta } = region.span;
+                        const span = new mapkit.CoordinateSpan(
+                          latitudeDelta,
+                          longitudeDelta
+                        );
 
-                    if (region) {
-                      const { latitudeDelta, longitudeDelta } = region.span;
-                      const span = new mapkit.CoordinateSpan(
-                        latitudeDelta,
-                        longitudeDelta
-                      );
+                        const coordinateRegion = new mapkit.CoordinateRegion(
+                          center,
+                          span
+                        );
 
-                      const coordinateRegion = new mapkit.CoordinateRegion(
-                        center,
-                        span
-                      );
-
-                      map.setRegionAnimated(coordinateRegion, span);
-                    } else {
-                      map.setCenterAnimated(center);
+                        map.setRegionAnimated(coordinateRegion, span);
+                      } else {
+                        map.setCenterAnimated(center);
+                      }
+                    } catch (err) {
+                      console.log(err);
                     }
                   },
                   map
@@ -77,14 +79,11 @@ const Search = (): JSX.Element => {
   const handleSearch = (query: string, callback: any, map: mapkit.Map) => {
     try {
       const geocode = new mapkit.Geocoder();
-
       geocode.lookup(query, (err, res) => callback(err, res));
     } catch (err) {
       console.log(err);
     }
   };
-
-  const form = new mapkit.Search({ includeAddresses: true });
 
   return (
     <form onSubmit={e => e.preventDefault()}>
