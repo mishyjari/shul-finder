@@ -36,7 +36,7 @@ const MapProvider = (props: any) => {
         map.setCenterAnimated(userLocation);
         map.setRegionAnimated(region);
       } catch {
-        console.log('Error setting location');
+        console.log('Couldnt get user location');
       }
     },
     (err: any) => {

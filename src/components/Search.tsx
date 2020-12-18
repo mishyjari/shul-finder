@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { ResultsContext } from '../contexts/ResultsContext';
 import { MapContext } from '../contexts/MapContext';
-import { ResultsContextInterface } from '../interfaces/interfaces';
-import { format } from 'path';
+import { Form, Button, Col } from 'react-bootstrap';
 
 const Search = (props: any): JSX.Element => {
   const [search, setSearch] = useState('');
@@ -12,7 +10,7 @@ const Search = (props: any): JSX.Element => {
       <MapContext.Consumer>
         {({ map }: any) => {
           return (
-            <button
+            <Button
               type='submit'
               onClick={() => {
                 map.removeAnnotations(map.annotations);
@@ -58,7 +56,7 @@ const Search = (props: any): JSX.Element => {
               }}
             >
               Go
-            </button>
+            </Button>
           );
         }}
       </MapContext.Consumer>
@@ -86,15 +84,22 @@ const Search = (props: any): JSX.Element => {
   };
 
   return (
-    <form onSubmit={e => e.preventDefault()}>
-      <label>Search: </label>
-      <input
-        value={search}
-        name='search'
-        onChange={e => setSearch(e.target.value)}
-      />
-      <Submit />
-    </form>
+    <Form onSubmit={e => e.preventDefault()}>
+      <Form.Row>
+        <Col>
+          <Form.Label>Search: </Form.Label>
+          <Form.Control
+            type='text'
+            value={search}
+            name='search'
+            onChange={e => setSearch(e.target.value)}
+          />
+        </Col>
+        <Col>
+          <Submit />
+        </Col>
+      </Form.Row>
+    </Form>
   );
 };
 

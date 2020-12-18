@@ -5,11 +5,6 @@ import Search from './Search';
 export default function ModalIntercept(props: any) {
   const [show, setShow] = useState(true);
 
-  const handleClose = () => {
-    setShow(false);
-    props.callback();
-  };
-
   return (
     <Modal
       show={show}
@@ -23,7 +18,9 @@ export default function ModalIntercept(props: any) {
       </Modal.Header>
       <Modal.Body>
         <Search />
-        <Button onClick={handleClose}>Use Current Location</Button>
+        <Button variant='secondary w-50' onClick={() => setShow(false)}>
+          Close
+        </Button>
       </Modal.Body>
     </Modal>
   );

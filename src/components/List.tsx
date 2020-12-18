@@ -22,8 +22,6 @@ const List = ({ map }: any): JSX.Element => {
   const toggleHidden = () => setHidden(!hidden);
 
   const loadMoreResults = (context: any) => {
-    console.log(displayResults);
-    console.log(context);
     setDisplayResults({
       results: context.results.slice(0, displayResults.displayCount),
       displayCount: (displayResults.displayCount += displayCountPerPage),
@@ -32,11 +30,9 @@ const List = ({ map }: any): JSX.Element => {
   };
 
   const handleScroll = (e: any) => {
-    console.log('scroll');
     const bottom =
       e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
     if (bottom) {
-      console.log('bottom');
       setDisplayResults({
         results: [],
         displayCount: (displayResults.displayCount += displayCountPerPage),
@@ -44,7 +40,11 @@ const List = ({ map }: any): JSX.Element => {
     }
   };
 
-  return (
+  return hidden ? (
+    <div className='show-list'>
+      <button onClick={toggleHidden}>Show List</button>
+    </div>
+  ) : (
     <div
       className={hidden ? 'list-fluid collapse' : 'list-fluid expand'}
       onScroll={handleScroll}
@@ -77,7 +77,7 @@ const List = ({ map }: any): JSX.Element => {
                 })}
               <button
                 onClick={() => loadMoreResults(context)}
-                className='btn btn-secondary w-75'
+                className='btn btn-secondary w-100 load-more-btn'
               >
                 Load More
               </button>

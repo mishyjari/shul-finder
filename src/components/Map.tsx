@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ResultsContext } from '../contexts/ResultsContext';
 import {
   Synagogue,
@@ -10,13 +10,26 @@ import {
   synagogueAnnotation,
   isInVisibleMapRect,
 } from './annotations/annotations';
-// import ModalIntercept from './ModalIntercept';
+import { Toast } from 'react-bootstrap';
+import ModalIntercept from './ModalIntercept';
 
 require('apple-mapkit-js');
 
 const Map = ({ updateMap, setMap, map }: MapContextInterface): JSX.Element => {
+  const [loadAnnotations, setLoadAnnotations] = useState(false);
+
   useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (success: any) => {
+        setLoadAnnotations(true);
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+
     updateMap('map-container');
+
     return () => setMap();
   }, []);
 
@@ -56,12 +69,42 @@ const Map = ({ updateMap, setMap, map }: MapContextInterface): JSX.Element => {
   return (
     <ResultsContext.Consumer>
       {(context: ResultsContextInterface) => {
-        updateAnnotationsOnNewRegion(context);
-        map.addEventListener('region-change-end', () =>
-          updateAnnotationsOnNewRegion(context)
+        if (loadAnnotations) {
+          updateAnnotationsOnNewRegion(context);
+        }
+
+        const dist = Math.floor(
+          (map.visibleMapRect.size.height + map.visibleMapRect.size.width) *
+            1000
         );
 
-        return <div id='map-container'></div>;
+        map.addEventListener('region-change-end', () => {
+          if (loadAnnotations || dist < 10) {
+            updateAnnotationsOnNewRegion(context);
+          }
+        });
+
+        return loadAnnotations ? (
+          <div id='map-container'></div>
+        ) : (
+          <div id='map-container'>
+            {dist >= 10 ? (
+              <>
+                <Toast>
+                  <Toast.Header>
+                    <strong>Location Services Disabled</strong>
+                  </Toast.Header>
+                  <Toast.Body>
+                    Zoom in or use search to view map annotations.
+                  </Toast.Body>
+                </Toast>
+                <ModalIntercept />
+              </>
+            ) : (
+              <ModalIntercept />
+            )}
+          </div>
+        );
       }}
     </ResultsContext.Consumer>
   );
