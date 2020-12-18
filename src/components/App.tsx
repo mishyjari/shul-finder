@@ -21,7 +21,7 @@ function App() {
         text='Dataset is incomplete and limited to the US. More thorough data and features coming soon!'
       />
       <MapProvider>
-        <ModalIntercept />
+        {/* <ModalIntercept /> */}
 
         <ResultsProvider>
           <Router>

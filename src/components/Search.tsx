@@ -4,7 +4,7 @@ import { MapContext } from '../contexts/MapContext';
 import { ResultsContextInterface } from '../interfaces/interfaces';
 import { format } from 'path';
 
-const Search = (cb: any): JSX.Element => {
+const Search = (props: any): JSX.Element => {
   const [search, setSearch] = useState('');
 
   const Submit = () => {

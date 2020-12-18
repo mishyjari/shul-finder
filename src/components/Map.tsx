@@ -10,7 +10,7 @@ import {
   synagogueAnnotation,
   isInVisibleMapRect,
 } from './annotations/annotations';
-import ModalIntercept from './ModalIntercept';
+// import ModalIntercept from './ModalIntercept';
 
 require('apple-mapkit-js');
 

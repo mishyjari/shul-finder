@@ -39,7 +39,7 @@ const MapProvider = (props: any) => {
         console.log('Error setting location');
       }
     },
-    (err: PositionError) => {
+    (err: any) => {
       console.log(err.message);
       const center = new mapkit.Coordinate(39.5, -98.35);
       const span = new mapkit.CoordinateSpan(50, 50);
