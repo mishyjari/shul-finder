@@ -41,7 +41,9 @@ const List = ({ map }: any, props: any): JSX.Element => {
     }
   };
 
-  return hidden ? (
+  return props.mobile ? (
+    <h1>mobile</h1>
+  ) : hidden ? (
     <div className='show-list'>
       <button onClick={toggleHidden}>Show List</button>
     </div>

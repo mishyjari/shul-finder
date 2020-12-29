@@ -5,7 +5,8 @@ import List from './List';
 import { MapContext } from '../contexts/MapContext';
 
 const MobileContainer = (): JSX.Element => {
-  const [showMap, setShowMap] = useState(false);
+  const [showMap, setShowMap] = useState(true);
+  console.log('using mobile');
   return (
     <MapContext.Consumer>
       {(context: any) => {

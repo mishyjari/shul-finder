@@ -1,25 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
+import InfoModal from './InfoModal';
+import { Synagogue } from '../interfaces/interfaces';
 
-interface Synagogue {
-  name: string;
-  city: string;
-  state: string;
-  movement: string;
-}
+export default function MobileListItem(synagogue: Synagogue): JSX.Element {
+  const [showInfo, setShowInfo] = useState(false);
+  const { name, city, state, movement } = synagogue;
 
-export default function MobileListItem({
-  name,
-  city,
-  state,
-  movement,
-}: Synagogue): JSX.Element {
   return (
-    <div className='mobile-list-item'>
+    <div className='mobile-list-item' onClick={() => setShowInfo(true)}>
       <h5>{name}</h5>
       <h6>
         {city}, {state}
       </h6>
       <em>{movement}</em>
+      {showInfo ? <InfoModal {...synagogue} /> : null}
     </div>
   );
 }

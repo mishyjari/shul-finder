@@ -253,5 +253,53 @@ body {
 }
 
 .mobile-list {
-    border: 1px solid red
+    // position: absolute;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding: .5em;
+    box-shadow: inset 1px 2px 2px $bg-dark;
+    overflow-y: auto;
+    overflow-x: auto;
+    transition: all 200ms ease-in-out 50ms;
+    z-index: 999;
+    align-items: center;
+}
+
+.menu {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.618);
+    width: 95vw;
+    top: 10vh;
+    height: 80vh;
+    z-index: 999;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: .5em;
+        justify-content: center;
+        align-items: stretch;
+    }
+}
+
+.mobile-list-item {
+    border: 1px solid $bg-light;
+    border-radius: .5em;
+    margin: .5em;
+    width: 100%;
+    text-align: center;
+}
+
+.menu-button {
+    &:hover {
+        cursor: pointer;
+    }
 }
