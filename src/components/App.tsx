@@ -40,7 +40,6 @@ function App() {
               </main>
             </MobileView>
           </Router>
-          <Footer />
         </ResultsProvider>
       </MapProvider>
     </div>
