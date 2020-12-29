@@ -6,6 +6,10 @@ export interface Synagogue {
   city: string;
   state: string;
   movement: string;
+  phone: string;
+  url: string;
+  zip: string;
+  address: string;
 }
 
 export interface ResultsContextInterface {

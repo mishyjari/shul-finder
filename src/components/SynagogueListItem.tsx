@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import InfoModal from './InfoModal';
-
-interface Synagogue {
-  name: string;
-  city: string;
-  state: string;
-  movement: string;
-}
+import { Synagogue } from '../interfaces/interfaces';
 
 // const SynagogueListItem = (props: any) => {
 //   console.log(props);
