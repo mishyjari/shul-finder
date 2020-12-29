@@ -79,9 +79,3 @@ header {
         }
     }
 }
-
-footer>h6 {
-    @extend header;
-    margin: 0;
-    padding: 1em;
-}

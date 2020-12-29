@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import InfoModal from './InfoModal';
 
 interface Synagogue {
   name: string;
@@ -12,19 +13,18 @@ interface Synagogue {
 //   return <div></div>;
 // };
 
-const SynagogueListItem = ({
-  name,
-  city,
-  state,
-  movement,
-}: Synagogue): JSX.Element => {
+const SynagogueListItem = (synagogue: Synagogue): JSX.Element => {
+  const [showInfo, setShowInfo] = useState(false);
+  const { name, city, state, movement } = synagogue;
+
   return (
-    <div className='synagogue-list-item'>
+    <div className='synagogue-list-item' onClick={() => setShowInfo(true)}>
       <h5>{name}</h5>
       <h6>
         {city}, {state}
       </h6>
       <em>{movement}</em>
+      {showInfo ? <InfoModal {...synagogue} /> : null}
     </div>
   );
 };

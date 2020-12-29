@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SynagogueListItem from './SynagogueListItem';
+import MobileListItem from './MobileListItem';
 import { ResultsContext } from '../contexts/ResultsContext';
 import { Synagogue } from '../interfaces/interfaces';
 import { isInVisibleMapRect } from './annotations/annotations';
@@ -12,7 +13,7 @@ interface ResultsContextInterface {
 
 const displayCountPerPage = 10;
 
-const List = ({ map }: any): JSX.Element => {
+const List = ({ map }: any, props: any): JSX.Element => {
   const [hidden, setHidden] = useState(false);
   const [displayResults, setDisplayResults] = useState({
     results: [],
@@ -71,7 +72,9 @@ const List = ({ map }: any): JSX.Element => {
                 })
                 .slice(0, displayResults.displayCount)
                 .map((synagogue: Synagogue) => {
-                  return (
+                  return props.mobile ? (
+                    <MobileListItem key={synagogue._id} {...synagogue} />
+                  ) : (
                     <SynagogueListItem key={synagogue._id} {...synagogue} />
                   );
                 })}
