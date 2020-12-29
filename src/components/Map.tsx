@@ -17,6 +17,9 @@ require('apple-mapkit-js');
 
 const Map = ({ updateMap, setMap, map }: MapContextInterface): JSX.Element => {
   const [loadAnnotations, setLoadAnnotations] = useState(false);
+  const [showToast, setShowToast] = useState(true);
+  const toggleShowToast = () => setShowToast(!showToast);
+  const toggleLoadAnnotations = () => setLoadAnnotations(!loadAnnotations);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -90,7 +93,7 @@ const Map = ({ updateMap, setMap, map }: MapContextInterface): JSX.Element => {
           <div id='map-container'>
             {dist >= 10 ? (
               <>
-                <Toast>
+                <Toast show={showToast} onClose={toggleShowToast}>
                   <Toast.Header>
                     <strong>Location Services Disabled</strong>
                   </Toast.Header>
@@ -98,10 +101,10 @@ const Map = ({ updateMap, setMap, map }: MapContextInterface): JSX.Element => {
                     Zoom in or use search to view map annotations.
                   </Toast.Body>
                 </Toast>
-                <ModalIntercept />
+                <ModalIntercept toggleAnnotations={setLoadAnnotations} />
               </>
             ) : (
-              <ModalIntercept />
+              <ModalIntercept toggleAnnotations={setLoadAnnotations} />
             )}
           </div>
         );

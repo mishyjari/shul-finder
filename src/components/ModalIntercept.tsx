@@ -4,6 +4,9 @@ import Search from './Search';
 
 export default function ModalIntercept(props: any) {
   const [show, setShow] = useState(true);
+  const toggleShow = () => {
+    setShow(!show);
+  };
 
   return (
     <Modal
@@ -17,7 +20,10 @@ export default function ModalIntercept(props: any) {
         <Modal.Title>Search By Location</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Search />
+        <Search
+          handleClose={toggleShow}
+          toggleAnnotations={props.toggleAnnotations}
+        />
         <Button variant='secondary w-50' onClick={() => setShow(false)}>
           Close
         </Button>

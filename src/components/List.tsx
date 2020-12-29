@@ -10,7 +10,7 @@ interface ResultsContextInterface {
   setResults: any;
 }
 
-const displayCountPerPage = 5;
+const displayCountPerPage = 10;
 
 const List = ({ map }: any): JSX.Element => {
   const [hidden, setHidden] = useState(false);

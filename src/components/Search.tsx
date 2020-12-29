@@ -13,6 +13,10 @@ const Search = (props: any): JSX.Element => {
             <Button
               type='submit'
               onClick={() => {
+                if (props.handleClose) {
+                  props.handleClose();
+                }
+
                 map.removeAnnotations(map.annotations);
                 handleSearch(
                   search,
@@ -44,6 +48,7 @@ const Search = (props: any): JSX.Element => {
                         );
 
                         map.setRegionAnimated(coordinateRegion, span);
+                        props.toggleAnnotations(true);
                       } else {
                         map.setCenterAnimated(center);
                       }
@@ -75,6 +80,9 @@ const Search = (props: any): JSX.Element => {
   // };
 
   const handleSearch = (query: string, callback: any, map: mapkit.Map) => {
+    if (props.toggleAnnotations) {
+      props.toggleAnnotations(false);
+    }
     try {
       const geocode = new mapkit.Geocoder();
       geocode.lookup(query, (err, res) => callback(err, res));
