@@ -12,6 +12,7 @@ import {
 } from './annotations/annotations';
 import { Toast } from 'react-bootstrap';
 import ModalIntercept from './ModalIntercept';
+import InfoModal from './InfoModal';
 
 require('apple-mapkit-js');
 
@@ -19,7 +20,31 @@ const Map = ({ updateMap, setMap, map }: MapContextInterface): JSX.Element => {
   const [loadAnnotations, setLoadAnnotations] = useState(false);
   const [showToast, setShowToast] = useState(true);
   const toggleShowToast = () => setShowToast(!showToast);
-  const toggleLoadAnnotations = () => setLoadAnnotations(!loadAnnotations);
+
+  const [showInfo, setShowInfo] = useState({
+    show: false,
+    data: {
+      latitude: 0,
+      longitude: 0,
+      _id: 0,
+      name: '',
+      city: '',
+      state: '',
+      movement: '',
+      phone: '',
+      url: '',
+      zip: '',
+      address: '',
+    },
+  });
+
+  map.addEventListener('select', (e: any) => {
+    if (map.selectedAnnotation!.memberAnnotations) {
+      const coord = map.selectedAnnotation!.coordinate;
+    }
+  });
+
+  // const toggleLoadAnnotations = () => setLoadAnnotations(!loadAnnotations);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -56,9 +81,18 @@ const Map = ({ updateMap, setMap, map }: MapContextInterface): JSX.Element => {
           const { latitude, longitude } = synagogue;
 
           if (isInVisibleMapRect({ latitude, longitude }, boundingRegion)) {
-            const annotation: mapkit.MarkerAnnotation = synagogueAnnotation(
-              synagogue
-            );
+            const annotation: any = synagogueAnnotation(synagogue);
+
+            annotation.addEventListener('select', (e: any) => {
+              setShowInfo({
+                ...showInfo,
+                show: false,
+              });
+              setShowInfo({
+                show: true,
+                data: e.target.data,
+              });
+            });
 
             map.addAnnotation(annotation);
           }
@@ -88,7 +122,9 @@ const Map = ({ updateMap, setMap, map }: MapContextInterface): JSX.Element => {
         });
 
         return loadAnnotations ? (
-          <div id='map-container'></div>
+          <div id='map-container'>
+            {showInfo.show ? <InfoModal {...showInfo.data} /> : null}
+          </div>
         ) : (
           <div id='map-container'>
             {dist >= 10 ? (

@@ -41,9 +41,7 @@ export const synagogueAnnotation = (
     },
   };
   const annotation = new mapkit.MarkerAnnotation(coords, options);
-  // annotation.addEventListener('select', () => {
-  //   console.log(annotation.titleVisibility);
-  // });
+
   return annotation;
 };
 
