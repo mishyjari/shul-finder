@@ -40,7 +40,18 @@ const Map = ({ updateMap, setMap, map }: MapContextInterface): JSX.Element => {
 
   map.addEventListener('select', (e: any) => {
     if (map.selectedAnnotation!.memberAnnotations) {
-      const coord = map.selectedAnnotation!.coordinate;
+      const { longitude, latitude } = map.selectedAnnotation!.coordinate;
+      const center = new mapkit.Coordinate(latitude, longitude);
+      const { latitudeDelta, longitudeDelta } = map.region.span;
+      const span = new mapkit.CoordinateSpan(
+        latitudeDelta * 0.3,
+        longitudeDelta * 0.3
+      );
+
+      const region = new mapkit.CoordinateRegion(center, span);
+
+      // map.setCenterAnimated(center);
+      map.setRegionAnimated(region);
     }
   });
 
